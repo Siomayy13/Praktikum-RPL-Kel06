@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>User Page</title>
+</head>
+
+<body>
+
+    <h1>USER DASHBOARD</h1>
+
+    <div>
+        <h3>Data Kamu</h3>
+        <p><b>Name:</b> <span id="viewName"></span></p>
+        <p><b>Email:</b> <span id="viewEmail"></span></p>
+    </div>
+
+    <hr>
+
+    <button onclick="showEdit()">Edit Profile</button>
+    <button onclick="logout()">Logout</button>
+
+    <div id="editForm" style="display:none;">
+        <h3>Edit Profile</h3>
+        <input id="name"><br><br>
+        <input id="email"><br><br>
+        <input id="password"><br><br>
+        <button onclick="updateUser()">Simpan</button>
+    </div>
+
+    <hr>
+
+    <h3>Create Report</h3>
+
+    <input id="title" placeholder="Judul"><br><br>
+
+    <select id="category">
+        <option value="urgent">Urgent</option>
+        <option value="normal">Normal</option>
+    </select><br><br>
+
+    <!-- 🔥 FIX: rename biar ga bentrok -->
+    <input id="reportLocation" placeholder="Lokasi"><br><br>
+
+    <textarea id="description" placeholder="Deskripsi"></textarea><br><br>
+
+    <input type="file" id="photo"><br><br>
+
+    <button onclick="createReport()">Kirim</button>
+
+    <hr>
+
+    <h3>Edit Report</h3>
+
+    <input type="hidden" id="editId">
+
+    <input id="editTitle"><br><br>
+
+    <select id="editCategory">
+        <option value="urgent">Urgent</option>
+        <option value="normal">Normal</option>
+    </select><br><br>
+
+    <!-- 🔥 FIX -->
+    <input id="editReportLocation"><br><br>
+
+    <textarea id="editDescription"></textarea><br><br>
+
+    <input type="file" id="editPhoto"><br><br>
+
+    <button onclick="updateReport()">Update</button>
+
+    <hr>
+
+    <h3>My Reports</h3>
+    <div id="reportList"></div>
+
+    <script>
+        const API = "http://localhost:2000";
+        const user = JSON.parse(localStorage.getItem("user"));
+
+        if (!user) location.href = "index.html";
+
+        const userId = Number(user.id);
+
+        // =====================
+        // LOAD USER
+        // =====================
+        async function loadUser() {
+            const res = await fetch(`${API}/users/${userId}`);
+            const data = await res.json();
+
+            viewName.innerText = data.name;
+            viewEmail.innerText = data.email;
+
+            name.value = data.name;
+            email.value = data.email;
+            password.value = data.password;
+        }
+        loadUser();
+
+        function showEdit() {
+            editForm.style.display = "block";
+        }
+
+        // =====================
+        // UPDATE USER
+        // =====================
+        async function updateUser() {
+            const res = await fetch(`${API}/users/${userId}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    name: name.value,
+                    email: email.value,
+                    password: password.value
+                })
+            });
+
+            const data = await res.json();
+            localStorage.setItem("user", JSON.stringify(data.data));
+            alert("Updated");
+            loadUser();
+        }
+
+        // =====================
+        // CREATE REPORT (FIXED)
+        // =====================
+        async function createReport() {
+            const formData = new FormData();
+
+            const file = document.getElementById("photo").files[0];
+
+            formData.append("title", document.getElementById("title").value);
+            formData.append("category", document.getElementById("category").value);
+            formData.append("location", document.getElementById("reportLocation").value); // 🔥 FIX
+            formData.append("description", document.getElementById("description").value);
+            formData.append("userId", userId);
+            formData.append("status", "pending");
+
+            if (file) {
+                formData.append("photo", file);
+            }
+
+            const res = await fetch(`${API}/reports`, {
+                method: "POST",
+                body: formData
+            });
+
+            const text = await res.text();
+            console.log("RESPONSE:", text);
+
+            alert("Report terkirim");
+            loadReports();
+        }
+
+        // =====================
+        // LOAD REPORTS
+        // =====================
+        async function loadReports() {
+            const res = await fetch(`${API}/reports`);
+            const data = await res.json();
+
+            const myReports = data.filter(r => Number(r.userId) === userId);
+
+            reportList.innerHTML = myReports.map(r => `
+                <div style="border:1px solid #ccc; padding:10px; margin:10px;">
+                    <b>${r.title}</b><br>
+                    ${r.category}<br>
+                    ${r.location}<br>
+                    ${r.description}<br>
+
+                    ${r.photo ? `<img src="${r.photo}" width="150"><br>` : ""}
+
+                    <b>Status:</b> ${r.status}<br><br>
+
+                    <button onclick="editReport(${r.id}, \`${r.title}\`, \`${r.category}\`, \`${r.location}\`, \`${r.description}\`)">
+                        Edit
+                    </button>
+
+                    <button onclick="deleteReport(${r.id})">Hapus</button>
+                </div>
+            `).join("");
+        }
+        loadReports();
+
+        // =====================
+        // EDIT
+        // =====================
+        function editReport(id, t, c, l, d) {
+            editId.value = id;
+            editTitle.value = t;
+            editCategory.value = c;
+            editReportLocation.value = l; // 🔥 FIX
+            editDescription.value = d;
+        }
+
+        // =====================
+        // UPDATE REPORT
+        // =====================
+        async function updateReport() {
+            const id = editId.value;
+
+            const formData = new FormData();
+
+            formData.append("title", editTitle.value);
+            formData.append("category", editCategory.value);
+            formData.append("location", document.getElementById("editReportLocation").value); // 🔥 FIX
+            formData.append("description", editDescription.value);
+
+            const file = document.getElementById("editPhoto").files[0];
+            if (file) {
+                formData.append("photo", file);
+            }
+
+            const res = await fetch(`${API}/reports/${id}`, {
+                method: "PUT",
+                body: formData
+            });
+
+            const text = await res.text();
+            console.log("UPDATE RESPONSE:", text);
+
+            alert("Updated");
+            loadReports();
+        }
+
+        // =====================
+        // DELETE
+        // =====================
+        async function deleteReport(id) {
+            if (!confirm("Yakin?")) return;
+
+            await fetch(`${API}/reports/${id}`, {
+                method: "DELETE"
+            });
+
+            loadReports();
+        }
+
+        function logout() {
+            localStorage.removeItem("user");
+            location.href = "index.html";
+        }
+    </script>
+
+</body>
+
+</html>

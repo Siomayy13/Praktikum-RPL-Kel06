@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Admin Dashboard</title>
+</head>
+
+<body>
+
+    <h1>ADMIN DASHBOARD</h1>
+
+    <h3>All Reports</h3>
+
+    <div id="list"></div>
+
+    <button onclick="loadReports()">Refresh</button>
+    <button onclick="logout()">Logout</button>
+
+    <hr>
+
+    <!-- EDIT REPORT -->
+    <h3>Edit Report</h3>
+
+    <input type="hidden" id="editId">
+
+    <input id="editTitle" placeholder="Title"><br><br>
+
+    <select id="editCategory">
+        <option value="urgent">Urgent</option>
+        <option value="normal">Normal</option>
+    </select><br><br>
+
+    <input id="editLocation" placeholder="Location"><br><br>
+
+    <textarea id="editDescription" placeholder="Description"></textarea><br><br>
+
+    <input type="file" id="editPhoto"><br><br>
+
+    <select id="editStatus">
+        <option value="pending">Pending</option>
+        <option value="process">Process</option>
+        <option value="done">Done</option>
+    </select><br><br>
+
+    <button onclick="updateReport()">Update Report</button>
+
+    <script>
+        const API = "http://localhost:2000";
+        const user = JSON.parse(localStorage.getItem("user"));
+
+        if (!user || user.role !== "admin") {
+            alert("akses ditolak");
+            location.href = "index.html";
+        }
+
+        // =====================
+        // LOAD REPORTS
+        // =====================
+        async function loadReports() {
+            const res = await fetch(`${API}/reports`);
+            const data = await res.json();
+
+            document.getElementById("list").innerHTML = data.map(r => `
+                <div style="border:1px solid #ccc; padding:10px; margin:10px;">
+                    <b>${r.title}</b><br>
+                    ${r.category}<br>
+                    ${r.location}<br>
+                    ${r.description}<br>
+
+                    ${r.photo ? `<img src="${r.photo}" width="150"><br>` : "Tidak ada foto<br>"}
+
+                    <b>Status:</b> ${r.status}<br><br>
+
+                    <button onclick="editReport(${r.id}, \`${r.title}\`, \`${r.category}\`, \`${r.location}\`, \`${r.description}\`, \`${r.status}\`)">
+                        Edit
+                    </button>
+
+                    <button onclick="deleteReport(${r.id})">
+                        Hapus
+                    </button>
+                </div>
+            `).join("");
+        }
+
+        loadReports();
+
+        // =====================
+        // EDIT
+        // =====================
+        function editReport(id, title, category, location, description, status) {
+            document.getElementById("editId").value = id;
+            document.getElementById("editTitle").value = title;
+            document.getElementById("editCategory").value = category;
+            document.getElementById("editLocation").value = location;
+            document.getElementById("editDescription").value = description;
+            document.getElementById("editStatus").value = status;
+        }
+
+        // =====================
+        // UPDATE (SAMA KAYA USER)
+        // =====================
+        async function updateReport() {
+            const id = document.getElementById("editId").value;
+
+            const formData = new FormData();
+
+            formData.append("title", document.getElementById("editTitle").value);
+            formData.append("category", document.getElementById("editCategory").value);
+            formData.append("location", document.getElementById("editLocation").value);
+            formData.append("description", document.getElementById("editDescription").value);
+            formData.append("status", document.getElementById("editStatus").value);
+
+            const file = document.getElementById("editPhoto").files[0];
+            if (file) {
+                formData.append("photo", file);
+            }
+
+            const res = await fetch(`${API}/reports/${id}`, {
+                method: "PUT",
+                body: formData
+            });
+
+            const text = await res.text();
+            console.log("UPDATE:", text);
+
+            alert("Report updated");
+            loadReports();
+        }
+
+        // =====================
+        // DELETE (SAMA STYLE USER)
+        // =====================
+        async function deleteReport(id) {
+            if (!confirm("Yakin mau hapus report ini?")) return;
+
+            await fetch(`${API}/reports/${id}`, {
+                method: "DELETE"
+            });
+
+            alert("Report deleted");
+            loadReports();
+        }
+
+        // =====================
+        // LOGOUT
+        // =====================
+        function logout() {
+            localStorage.removeItem("user");
+            location.href = "index.html";
+        }
+    </script>
+
+</body>
+
+</html>

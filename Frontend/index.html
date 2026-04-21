@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Login System</title>
+</head>
+
+<body>
+
+    <h2>Register</h2>
+    <input id="reg_name" placeholder="name">
+    <input id="reg_email" placeholder="email">
+    <input id="reg_password" placeholder="password">
+    <button onclick="register()">Register</button>
+
+    <hr>
+
+    <h2>Login</h2>
+    <input id="log_email" placeholder="email">
+    <input id="log_password" placeholder="password">
+    <button onclick="login()">Login</button>
+
+    <script>
+        const API = "http://localhost:2000";
+
+        // REGISTER
+        async function register() {
+            await fetch(API + "/users/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    name: reg_name.value,
+                    email: reg_email.value,
+                    password: reg_password.value
+                })
+            });
+
+            alert("register success");
+        }
+
+        // LOGIN
+        async function login() {
+            const res = await fetch(API + "/users/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    email: log_email.value,
+                    password: log_password.value
+                })
+            });
+
+            const data = await res.json();
+
+            if (!data.data) return alert("login gagal");
+
+            localStorage.setItem("user", JSON.stringify(data.data));
+
+            if (data.data.role === "admin") {
+                window.location.href = "admin.html";
+            } else {
+                window.location.href = "user.html";
+            }
+        }
+    </script>
+
+</body>
+
+</html>
