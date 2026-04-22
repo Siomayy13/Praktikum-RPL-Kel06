@@ -15,6 +15,14 @@
         <p><b>Email:</b> <span id="viewEmail"></span></p>
     </div>
 
+    <h3>Foto Profil</h3>
+
+    <img id="profileImg" width="120"><br><br>
+
+    <input type="file" id="profilePhoto"><br><br>
+
+    <button onclick="uploadPhoto()">Upload Foto</button>
+
     <hr>
 
     <button onclick="showEdit()">Edit Profile</button>
@@ -96,6 +104,10 @@
             name.value = data.name;
             email.value = data.email;
             password.value = data.password;
+
+            // Load user photo
+            document.getElementById("profileImg").src =
+                data.photo || "https://via.placeholder.com/120";
         }
         loadUser();
 
@@ -241,6 +253,30 @@
         function logout() {
             localStorage.removeItem("user");
             location.href = "index.html";
+        }
+
+        async function uploadPhoto() {
+            const file = document.getElementById("profilePhoto").files[0];
+
+            if (!file) {
+                alert("Pilih foto dulu");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("photo", file);
+
+            const res = await fetch(`${API}/users/${userId}/photo`, {
+                method: "PUT",
+                body: formData
+            });
+
+            const data = await res.json();
+
+            localStorage.setItem("user", JSON.stringify(data.data));
+
+            alert("Foto berhasil diupload");
+            loadUser();
         }
     </script>
 

@@ -20,6 +20,7 @@ model User {
   password  String
   role      String   @default("user")
   createdAt DateTime @default(now()) 
+  photo     String?
 
   // RELASI
   reports   Report[]
