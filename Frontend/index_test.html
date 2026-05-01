@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Login System</title>
+</head>
+
+<body>
+
+    <h2>Register</h2>
+    <input id="reg_name" placeholder="name">
+    <input id="reg_email" placeholder="email">
+    <input id="reg_password" placeholder="password">
+    <button onclick="register()">Register</button>
+
+    <hr>
+
+    <h2>Login</h2>
+    <input id="log_email" placeholder="email">
+    <input id="log_password" placeholder="password">
+    <button onclick="login()">Login</button>
+
+    <script>
+        const API = "http://localhost:2000";
+
+        async function register() {
+            await fetch(API + "/users/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    name: reg_name.value,
+                    email: reg_email.value,
+                    password: reg_password.value
+                })
+            });
+
+            alert("register success");
+        }
+
+        async function login() {
+            const email = log_email.value;
+            const password = log_password.value;
+
+            // 🔥 BERSIHKAN SEMUA SESSION DULU
+            localStorage.removeItem("user");
+            localStorage.removeItem("admin");
+
+            // =====================
+            // 1. COBA LOGIN ADMIN
+            // =====================
+            try {
+                const resAdmin = await fetch(API + "/admin/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const adminData = await resAdmin.json();
+
+                if (resAdmin.ok && adminData.data) {
+                    localStorage.setItem("admin", JSON.stringify(adminData.data));
+                    alert("Login sebagai admin");
+                    window.location.href = "admin.html";
+                    return;
+                }
+            } catch (err) {
+                console.log("Admin login gagal");
+            }
+
+            // =====================
+            // 2. LOGIN USER
+            // =====================
+            const resUser = await fetch(API + "/users/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password })
+            });
+
+            const userData = await resUser.json();
+
+            if (!resUser.ok || !userData.data) {
+                return alert("login gagal");
+            }
+
+            localStorage.setItem("user", JSON.stringify(userData.data));
+
+            alert("Login sebagai user");
+            window.location.href = "user.html";
+        }
+    </script>
+
+</body>
+
+</html>
