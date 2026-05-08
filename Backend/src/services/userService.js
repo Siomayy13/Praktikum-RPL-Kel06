@@ -36,13 +36,11 @@ const loginUser = async (email, password) => {
 
 // UPDATE
 const updateUser = async (id, data) => {
-    await getUserById(id);
     return await userRepository.updateUser(id, data);
 };
 
 // DELETE
 const deleteUser = async (id) => {
-    await getUserById(id);
     return await userRepository.deleteUser(id);
 };
 

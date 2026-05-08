@@ -19,13 +19,11 @@ const getReportById = async (id) => {
 
 // UPDATE
 const updateReport = async (id, data) => {
-    await getReportById(id);
     return await reportRepo.update(id, data);
 };
 
 // DELETE
 const deleteReport = async (id) => {
-    await getReportById(id);
     return await reportRepo.remove(id);
 };
 

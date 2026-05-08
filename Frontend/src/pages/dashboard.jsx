@@ -57,7 +57,8 @@ function Dashboard() {
       contentAreaRef.current.scrollTo(0, 0);
     }
 
-    if (user) {
+    const viewsNeedingData = ['beranda', 'daftar'];
+    if (user && viewsNeedingData.includes(activeView)) {
       fetchReports();
     }
 
@@ -70,12 +71,6 @@ function Dashboard() {
     diproses: 0,
     selesai: 0
   });
-
-  useEffect(() => {
-    if (!user) return;
-
-    fetchReports();
-  }, []);
 
   const fetchReports = async () => {
     try {

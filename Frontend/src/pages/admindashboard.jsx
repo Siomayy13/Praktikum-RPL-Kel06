@@ -93,7 +93,8 @@ function AdminDashboard() {
     if (contentAreaRef.current) {
       contentAreaRef.current.scrollTo(0, 0);
     }
-    if (user) {
+    const viewsNeedingData = ['beranda', 'kelola', 'detail', 'statistik'];
+    if (user && viewsNeedingData.includes(activeView)) {
       fetchReports();
     }
     setSearchQuery("");

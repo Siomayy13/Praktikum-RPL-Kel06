@@ -7,13 +7,26 @@ const create = async (data) => {
     });
 };
 
+const reportSelect = {
+    id: true,
+    title: true,
+    category: true,
+    location: true,
+    description: true,
+    photo: true,
+    status: true,
+    createdAt: true,
+    userId: true,
+    adminId: true,
+    user: { select: { id: true, name: true, email: true, photo: true } },
+    admin: { select: { id_admin: true, username: true, email: true, photo: true } }
+};
+
 // GET ALL
 const findAll = async () => {
     return prisma.report.findMany({
-        include: {
-            admin: true,
-            user: true
-        }
+        select: reportSelect,
+        orderBy: { createdAt: 'desc' }
     });
 };
 
@@ -21,10 +34,7 @@ const findAll = async () => {
 const findById = async (id) => {
     return prisma.report.findUnique({
         where: { id },
-        include: {
-            admin: true,
-            user: true
-        }
+        select: reportSelect
     });
 };
 

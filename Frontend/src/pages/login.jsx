@@ -25,14 +25,22 @@ function Login() {
         password: password
       };
 
-      // ADMIN - Gunakan BASE_URL
-      const adminRes = await fetch(`${BASE_URL}/admin/login`, {
+      const options = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
-      });
+      };
 
-      const adminData = await adminRes.json().catch(() => null);
+      // Jalankan admin & user login secara paralel
+      const [adminRes, userRes] = await Promise.all([
+        fetch(`${BASE_URL}/admin/login`, options),
+        fetch(`${BASE_URL}/users/login`, options)
+      ]);
+
+      const [adminData, userData] = await Promise.all([
+        adminRes.json().catch(() => null),
+        userRes.json().catch(() => null)
+      ]);
 
       if (adminRes.ok && adminData?.data?.id_admin) {
         localStorage.setItem('admin', JSON.stringify(adminData.data));
@@ -40,15 +48,6 @@ function Login() {
         setShowSuccess(true);
         return;
       }
-
-      // USER - Gunakan BASE_URL
-      const userRes = await fetch(`${BASE_URL}/users/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-
-      const userData = await userRes.json().catch(() => null);
 
       if (userRes.ok && userData?.data?.id) {
         localStorage.setItem('user', JSON.stringify(userData.data));
