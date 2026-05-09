@@ -1,5 +1,11 @@
 const { PrismaClient } = require("@prisma/client");
 
-const prisma = new PrismaClient();
+// Singleton pattern — prevents multiple PrismaClient instances
+// (critical on serverless environments like Vercel where modules can reload)
+const prisma = global._prisma ?? new PrismaClient();
+
+if (process.env.NODE_ENV !== "production") {
+    global._prisma = prisma;
+}
 
 module.exports = prisma;

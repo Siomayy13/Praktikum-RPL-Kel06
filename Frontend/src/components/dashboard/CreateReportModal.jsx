@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
 import { createReport } from '../../api/api';
+import { compressImage } from '../../utils/imageCompressor';
 import CustomDropdown from '../CustomDropdown';
 
 function CreateReportModal({ userId, onClose, onSuccess }) {
   const [form, setForm] = useState({
     title: '', category: '', location: '', description: '', photo: null,
   });
+  const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async () => {
+    if (submitting) return;
+    setSubmitting(true);
     try {
       const formData = new FormData();
       formData.append('title', form.title);
@@ -16,13 +20,18 @@ function CreateReportModal({ userId, onClose, onSuccess }) {
       formData.append('description', form.description);
       formData.append('userId', userId);
       formData.append('status', 'pending');
-      if (form.photo) formData.append('photo', form.photo);
+      if (form.photo) {
+        const compressed = await compressImage(form.photo);
+        formData.append('photo', compressed);
+      }
 
       await createReport(formData);
       onSuccess();
     } catch (err) {
       console.error(err);
       alert('Gagal kirim laporan: ' + err.message);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -124,8 +133,9 @@ function CreateReportModal({ userId, onClose, onSuccess }) {
 
         <div className="buat-modal-footer">
           <button className="buat-modal-btn-cancel" onClick={onClose}>Batal</button>
-          <button className="buat-modal-btn-submit" onClick={handleSubmit}>
-            <i className="fas fa-paper-plane"></i> Kirim Laporan
+          <button className="buat-modal-btn-submit" onClick={handleSubmit} disabled={submitting}>
+            <i className={submitting ? 'fas fa-spinner fa-spin' : 'fas fa-paper-plane'}></i>
+            {submitting ? ' Mengirim...' : ' Kirim Laporan'}
           </button>
         </div>
       </div>

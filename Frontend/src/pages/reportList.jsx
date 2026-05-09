@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Sidebar from '../components/sidebar';
 import { useReports } from '../hooks/useReports';
@@ -37,15 +37,15 @@ function ReportListPage() {
     setSubView('detail');
   };
 
-  const handleReportSuccess = async () => {
+  const handleReportSuccess = () => {
     setShowBuatModal(false);
-    await fetchReports();
     setModalState({
       isOpen: true,
       title: 'Laporan Terkirim!',
       message: 'Laporan fasilitas Anda telah berhasil dikirim dan akan segera diproses.',
       onCloseAction: () => setSubView('list'),
     });
+    fetchReports(); // background refresh — tidak memblokir modal
   };
 
   const handleLogout = () => navigate('/');
