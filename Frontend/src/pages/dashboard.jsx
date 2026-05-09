@@ -34,15 +34,15 @@ function Dashboard() {
     navigate('/reports', { state: { selectedReport: report } });
   };
 
-  const handleReportSuccess = async () => {
+  const handleReportSuccess = () => {
     setShowBuatModal(false);
-    await fetchReports();
     setModalState({
       isOpen: true,
       title: 'Laporan Terkirim!',
       message: 'Laporan fasilitas Anda telah berhasil dikirim dan akan segera diproses.',
       onCloseAction: () => navigate('/reports'),
     });
+    fetchReports(); // background refresh
   };
 
   return (

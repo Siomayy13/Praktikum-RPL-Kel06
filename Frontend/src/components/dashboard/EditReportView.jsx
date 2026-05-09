@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { updateReport } from '../../api/api';
+import { compressImage } from '../../utils/imageCompressor';
 import CustomDropdown from '../CustomDropdown';
 
 function EditReportView({ selectedReport, setSelectedReport, fetchReports, setActiveView, setModalState }) {
@@ -39,7 +40,10 @@ function EditReportView({ selectedReport, setSelectedReport, fetchReports, setAc
       formData.append('category', editKategori);
       formData.append('location', editData.location);
       formData.append('description', editData.description);
-      if (editData.photo) formData.append('photo', editData.photo);
+      if (editData.photo) {
+        const compressed = await compressImage(editData.photo);
+        formData.append('photo', compressed);
+      }
 
       const updatedResponse = await updateReport(selectedReport.id, formData);
       await fetchReports();
