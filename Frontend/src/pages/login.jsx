@@ -86,59 +86,61 @@ function Login() {
         <div className="login-card">
           <h2>Masuk ke lapor.in</h2>
 
-          <div className="form-group">
-            <div className="form-label-row">
-              <label className="form-label">Email</label>
-            </div>
-            <div className="input-container">
-              <i className="fas fa-at input-icon-left"></i>
-              <input
-                type="email"
-                className="login-input"
-                placeholder="Masukkan email Anda"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-          </div>
-
-          <div className="form-group">
-            <div className="form-label-row">
-              <label className="form-label">Kata Sandi</label>
-              <a href="#" className="forgot-password">Lupa kata sandi?</a>
-            </div>
-            <div className="input-container">
-              <i className="fas fa-lock input-icon-left"></i>
-              <input
-                type={showPassword ? "text" : "password"}
-                className="login-input"
-                placeholder="Masukkan kata sandi"
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  if (showError) setShowError(false);
-                }}
-              />
-              <i
-                className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'} input-icon-right`}
-                onClick={() => setShowPassword(!showPassword)}
-              ></i>
-            </div>
-            {showError && (
-              <div className="error-message">
-                <i className="fas fa-circle-exclamation"></i> Email atau password yang Anda masukkan salah.
+          <form onSubmit={handleLogin}>
+            <div className="form-group">
+              <div className="form-label-row">
+                <label className="form-label">Email</label>
               </div>
-            )}
-          </div>
+              <div className="input-container">
+                <i className="fas fa-at input-icon-left"></i>
+                <input
+                  type="email"
+                  className="login-input"
+                  placeholder="Masukkan email Anda"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+            </div>
 
-          <button
-            className="btn-login"
-            onClick={handleLogin}
-            disabled={loading}
-          >
-            {loading ? 'Loading...' : 'Masuk'}
-            <i className="fas fa-arrow-right"></i>
-          </button>
+            <div className="form-group">
+              <div className="form-label-row">
+                <label className="form-label">Kata Sandi</label>
+                <a href="#" className="forgot-password">Lupa kata sandi?</a>
+              </div>
+              <div className="input-container">
+                <i className="fas fa-lock input-icon-left"></i>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  className="login-input"
+                  placeholder="Masukkan kata sandi"
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (showError) setShowError(false);
+                  }}
+                />
+                <i
+                  className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'} input-icon-right`}
+                  onClick={() => setShowPassword(!showPassword)}
+                ></i>
+              </div>
+              {showError && (
+                <div className="error-message">
+                  <i className="fas fa-circle-exclamation"></i> Email atau password yang Anda masukkan salah.
+                </div>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              className="btn-login"
+              disabled={loading}
+            >
+              {loading ? 'Loading...' : 'Masuk'}
+              <i className="fas fa-arrow-right"></i>
+            </button>
+          </form>
         </div>
         <div className="login-card-footer">
           Belum punya akun? <Link to="/register">Daftar sekarang</Link>

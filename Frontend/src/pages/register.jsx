@@ -73,103 +73,105 @@ function Register() {
             <p className="register-subtitle">Sistem Manajemen Aduan Fasilitas Kampus.</p>
           </div>
 
-          {/* NAMA */}
-          <div className="form-group">
-            <div className="form-label-row">
-              <label className="form-label">Nama Lengkap</label>
-            </div>
-            <div className="input-container">
-              <i className="fas fa-user input-icon-left"></i>
-              <input
-                type="text"
-                className="login-input"
-                placeholder="Masukkan nama"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </div>
-          </div>
-
-          {/* EMAIL */}
-          <div className="form-group">
-            <div className="form-label-row">
-              <label className="form-label">Email</label>
-            </div>
-            <div className="input-container">
-              <i className="fas fa-graduation-cap input-icon-left"></i>
-              <input
-                type="email"
-                className="login-input"
-                placeholder="Masukkan Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-          </div>
-
-          {/* PASSWORD */}
-          <div className="form-row">
-            <div className="form-col form-group">
+          <form onSubmit={handleRegister}>
+            {/* NAMA */}
+            <div className="form-group">
               <div className="form-label-row">
-                <label className="form-label">Kata Sandi</label>
+                <label className="form-label">Nama Lengkap</label>
               </div>
               <div className="input-container">
-                <i className="fas fa-lock input-icon-left"></i>
+                <i className="fas fa-user input-icon-left"></i>
                 <input
-                  type={showPassword ? "text" : "password"}
+                  type="text"
                   className="login-input"
-                  placeholder="........"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Masukkan nama"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                 />
-                {password && (
-                  <i
-                    className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'} input-icon-right`}
-                    onClick={() => setShowPassword(!showPassword)}
-                  ></i>
-                )}
               </div>
             </div>
 
-            {/* CONFIRM */}
-            <div className="form-col form-group">
+            {/* EMAIL */}
+            <div className="form-group">
               <div className="form-label-row">
-                <label className="form-label">Konfirmasi</label>
+                <label className="form-label">Email</label>
               </div>
               <div className="input-container">
-                <i className="fas fa-shield-halved input-icon-left"></i>
+                <i className="fas fa-graduation-cap input-icon-left"></i>
                 <input
-                  type={showConfirmPassword ? "text" : "password"}
+                  type="email"
                   className="login-input"
-                  placeholder="........"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Masukkan Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
-                {confirmPassword && (
-                  <i
-                    className={`fas ${showConfirmPassword ? 'fa-eye-slash' : 'fa-eye'} input-icon-right`}
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  ></i>
-                )}
               </div>
             </div>
-          </div>
 
-          {/* ERROR */}
-          {showError && (
-            <div className="error-message">
-              <i className="fas fa-circle-exclamation"></i> {errorMsg}
+            {/* PASSWORD */}
+            <div className="form-row">
+              <div className="form-col form-group">
+                <div className="form-label-row">
+                  <label className="form-label">Kata Sandi</label>
+                </div>
+                <div className="input-container">
+                  <i className="fas fa-lock input-icon-left"></i>
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    className="login-input"
+                    placeholder="........"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                  {password && (
+                    <i
+                      className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'} input-icon-right`}
+                      onClick={() => setShowPassword(!showPassword)}
+                    ></i>
+                  )}
+                </div>
+              </div>
+
+              {/* CONFIRM */}
+              <div className="form-col form-group">
+                <div className="form-label-row">
+                  <label className="form-label">Konfirmasi</label>
+                </div>
+                <div className="input-container">
+                  <i className="fas fa-shield-halved input-icon-left"></i>
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    className="login-input"
+                    placeholder="........"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                  />
+                  {confirmPassword && (
+                    <i
+                      className={`fas ${showConfirmPassword ? 'fa-eye-slash' : 'fa-eye'} input-icon-right`}
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    ></i>
+                  )}
+                </div>
+              </div>
             </div>
-          )}
 
-          {/* BUTTON */}
-          <button
-            className="btn-login"
-            style={{ marginTop: '20px' }}
-            onClick={handleRegister}
-          >
-            Daftar Sekarang <i className="fas fa-arrow-right"></i>
-          </button>
+            {/* ERROR */}
+            {showError && (
+              <div className="error-message">
+                <i className="fas fa-circle-exclamation"></i> {errorMsg}
+              </div>
+            )}
+
+            {/* BUTTON */}
+            <button
+              type="submit"
+              className="btn-login"
+              style={{ marginTop: '20px' }}
+            >
+              Daftar Sekarang <i className="fas fa-arrow-right"></i>
+            </button>
+          </form>
         </div>
 
         <div className="login-card-footer">

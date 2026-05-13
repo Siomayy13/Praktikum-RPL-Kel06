@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { createReport } from '../../api/api';
 import { compressImage } from '../../utils/imageCompressor';
-import CustomDropdown from '../CustomDropdown';
+import { Dropdown, Space } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
 
 function CreateReportModal({ userId, onClose, onSuccess }) {
   const [form, setForm] = useState({
@@ -64,12 +65,28 @@ function CreateReportModal({ userId, onClose, onSuccess }) {
             <div className="buat-modal-row">
               <div className="buat-modal-field">
                 <label>Tingkat Kerusakan</label>
-                <CustomDropdown
-                  options={['Ringan', 'Sedang', 'Berat']}
-                  value={form.category}
-                  onChange={(val) => setForm({ ...form, category: val })}
-                  placeholder="Pilih salah satu"
-                />
+                <Dropdown
+                  menu={{
+                    items: ['Ringan', 'Sedang', 'Berat'].map((opt) => ({
+                      key: opt,
+                      label: opt,
+                      onClick: () => setForm({ ...form, category: opt }),
+                    })),
+                    selectedKeys: [form.category],
+                  }}
+                  trigger={['click']}
+                >
+                  <button
+                    type="button"
+                    className="buat-modal-input"
+                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', background: '#fff', textAlign: 'left' }}
+                  >
+                    <span style={{ color: form.category ? '#1a3252' : '#94a3b8' }}>
+                      {form.category || 'Pilih salah satu'}
+                    </span>
+                    <DownOutlined style={{ fontSize: '12px', color: '#94a3b8' }} />
+                  </button>
+                </Dropdown>
               </div>
               <div className="buat-modal-field">
                 <label>Lokasi Spesifik</label>

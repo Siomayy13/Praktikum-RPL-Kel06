@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { updateReport, deleteReport } from '../../api/api';
 import { getStatusClass } from '../../utils/formatters';
+import { Dropdown } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
 
 const formatTanggal = (date) =>
   new Date(date).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) + ' WIB';
 
 function AdminReportDetailView({ selectedReport, setSelectedReport, user, fetchReports, setActiveView }) {
-  const [showStatusDropdown, setShowStatusDropdown] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   if (!selectedReport) {
@@ -35,7 +36,6 @@ function AdminReportDetailView({ selectedReport, setSelectedReport, user, fetchR
       const updatedResponse = await updateReport(selectedReport.id, formData);
       await fetchReports();
       if (updatedResponse?.data) setSelectedReport(updatedResponse.data);
-      setShowStatusDropdown(false);
     } catch (err) {
       console.error(err);
       alert('Gagal mengupdate status laporan');
@@ -114,32 +114,33 @@ function AdminReportDetailView({ selectedReport, setSelectedReport, user, fetchR
 
         <div className="list-side">
           <div className="detail-header-actions" style={{ gap: '16px' }}>
-            <div style={{ flex: 1, position: 'relative' }}>
-              <button
-                className="btn-edit-report"
-                style={{ width: '100%', justifyContent: 'center', borderColor: '#f1f5f9', boxShadow: '0 2px 4px rgba(0,0,0,0.02)', padding: '16px' }}
-                onClick={() => setShowStatusDropdown(!showStatusDropdown)}
+            <div style={{ flex: 1 }}>
+              <Dropdown
+                menu={{
+                  items: [
+                    { key: 'pending',  label: 'Pending',  icon: <i className="fas fa-clock"        style={{ color: '#475569' }} /> },
+                    { key: 'diproses', label: 'Diproses', icon: <i className="fas fa-gear"         style={{ color: '#c2410c' }} /> },
+                    { key: 'selesai',  label: 'Selesai',  icon: <i className="fas fa-circle-check" style={{ color: '#0f766e' }} /> },
+                    { key: 'ditolak',  label: 'Ditolak',  icon: <i className="fas fa-circle-xmark" style={{ color: '#b91c1c' }} />, danger: true },
+                  ],
+                  onClick: ({ key }) => handleUpdateStatus(key),
+                  selectedKeys: [selectedReport.status?.toLowerCase()],
+                }}
+                trigger={['click']}
+                placement="bottomLeft"
               >
-                <i className="fas fa-pen" style={{ color: '#0f766e' }}></i>
-                <span style={{ color: '#0f766e' }}>Ubah<br />Status</span>
-              </button>
-              {showStatusDropdown && (
-                <div className="status-dropdown-menu">
-                  {[
-                    { value: 'pending', label: 'Pending', color: '#475569' },
-                    { value: 'diproses', label: 'Diproses', color: '#c2410c' },
-                    { value: 'selesai', label: 'Selesai', color: '#0f766e' },
-                    { value: 'ditolak', label: 'Ditolak', color: '#b91c1c' },
-                  ].map(({ value, label, color }) => (
-                    <div key={value} className="status-dropdown-item" onClick={() => handleUpdateStatus(value)}>
-                      <span style={{ color }}>{label}</span>
-                      <div className="status-dot" style={{ backgroundColor: color }}></div>
-                    </div>
-                  ))}
-                </div>
-              )}
+                <button
+                  type="button"
+                  className="btn-edit-report"
+                  style={{ width: '100%', justifyContent: 'center', borderColor: '#f1f5f9', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}
+                >
+                  <i className="fas fa-pen" style={{ color: '#0f766e' }}></i>
+                  <span style={{ color: '#0f766e' }}>Ubah<br />Status</span>
+                  <DownOutlined style={{ fontSize: '10px', color: '#0f766e', marginLeft: '4px' }} />
+                </button>
+              </Dropdown>
             </div>
-            <button className="btn-delete-report" style={{ flex: 1, justifyContent: 'center', padding: '16px' }} onClick={() => setShowDeleteModal(true)}>
+            <button className="btn-delete-report" style={{ flex: 1, justifyContent: 'center' }} onClick={() => setShowDeleteModal(true)}>
               <i className="fas fa-trash-alt"></i> Hapus<br />Laporan
             </button>
           </div>
