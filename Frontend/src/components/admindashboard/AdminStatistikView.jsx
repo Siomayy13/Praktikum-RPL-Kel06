@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
+import { Dropdown } from 'antd';
+import { CalendarOutlined, DownOutlined } from '@ant-design/icons';
 
 function AdminStatistikView({ reports }) {
   const [statistikPeriod, setStatistikPeriod] = useState('semua');
-  const [openDropdown, setOpenDropdown] = useState(false);
 
   const now = new Date();
   const filtered = reports.filter(r => {
@@ -55,31 +56,28 @@ function AdminStatistikView({ reports }) {
             Data diperbarui secara real-time berdasarkan laporan masuk.
           </p>
         </div>
-        <div style={{ position: 'relative' }}>
+        <Dropdown
+          menu={{
+            items: periodOptions.map(opt => ({
+              key: opt.value,
+              label: opt.label,
+              onClick: () => setStatistikPeriod(opt.value),
+            })),
+            selectedKeys: [statistikPeriod],
+          }}
+          trigger={['click']}
+          placement="bottomRight"
+        >
           <button
+            type="button"
             className="btn-dark-blue"
-            onClick={() => setOpenDropdown(!openDropdown)}
-            style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '14px 24px' }}
+            style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 20px', cursor: 'pointer' }}
           >
-            <i className="far fa-calendar-alt"></i>
+            <CalendarOutlined />
             {currentPeriodLabel}
-            <i className={`fas fa-chevron-${openDropdown ? 'up' : 'down'}`} style={{ marginLeft: '4px', fontSize: '0.8rem' }}></i>
+            <DownOutlined style={{ fontSize: '0.75rem', marginLeft: '2px' }} />
           </button>
-          {openDropdown && (
-            <div style={{ position: 'absolute', top: '100%', right: 0, marginTop: '8px', background: '#1a3252', borderRadius: '12px', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.3)', padding: '8px', zIndex: 50, width: '200px', border: '1px solid #274b7a' }}>
-              {periodOptions.map(opt => (
-                <div
-                  key={opt.value}
-                  onClick={() => { setStatistikPeriod(opt.value); setOpenDropdown(false); }}
-                  style={{ padding: '10px 16px', borderRadius: '8px', cursor: 'pointer', fontSize: '0.9rem', color: 'white', background: statistikPeriod === opt.value ? '#274b7a' : 'transparent', fontWeight: statistikPeriod === opt.value ? '700' : '500', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}
-                >
-                  {opt.label}
-                  {statistikPeriod === opt.value && <i className="fas fa-check" style={{ fontSize: '0.8rem', color: '#a5f3fc' }}></i>}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        </Dropdown>
       </div>
 
       <div className="stats-layout">

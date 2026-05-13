@@ -767,26 +767,40 @@ td {
     background-color: white;
     color: #0f766e;
     border: 1px solid #e2e8f0;
-    padding: 12px 20px;
+    padding: 8px 16px;
     border-radius: 8px;
     font-weight: 700;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 8px;
+    font-size: 0.85rem;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.btn-edit-report:hover {
+    background-color: #f0fdf9;
+    border-color: #0f766e;
+    color: #0a5c56;
 }
 
 .btn-delete-report {
     background-color: #b91c1c;
     color: white;
     border: none;
-    padding: 12px 20px;
+    padding: 8px 16px;
     border-radius: 8px;
     font-weight: 700;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 8px;
+    font-size: 0.85rem;
+    transition: background-color 0.2s ease;
+}
+
+.btn-delete-report:hover {
+    background-color: #991b1b;
 }
 
 .detail-card {
@@ -1841,6 +1855,11 @@ td {
 .delete-modal-btn-cancel:hover {
     color: #1e293b;
     text-decoration: underline;
+}
+
+/* ANT DESIGN DROPDOWN - z-index above all modals */
+.ant-dropdown {
+    z-index: 10000 !important;
 }
 
 /* BUAT LAPORAN MODAL */

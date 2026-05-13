@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { updateReport } from '../../api/api';
 import { compressImage } from '../../utils/imageCompressor';
-import CustomDropdown from '../CustomDropdown';
+import { Dropdown } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
 
 function EditReportView({ selectedReport, setSelectedReport, fetchReports, setActiveView, setModalState }) {
   const [editData, setEditData] = useState({ title: '', category: '', location: '', description: '', photo: null });
@@ -85,12 +86,28 @@ function EditReportView({ selectedReport, setSelectedReport, fetchReports, setAc
         <div className="form-row">
           <div className="form-group">
             <label>Tingkat Kerusakan</label>
-            <CustomDropdown
-              options={['Ringan', 'Sedang', 'Berat']}
-              value={editKategori}
-              onChange={setEditKategori}
-              placeholder="Pilih salah satu"
-            />
+            <Dropdown
+              menu={{
+                items: ['Ringan', 'Sedang', 'Berat'].map((opt) => ({
+                  key: opt,
+                  label: opt,
+                  onClick: () => setEditKategori(opt),
+                })),
+                selectedKeys: [editKategori],
+              }}
+              trigger={['click']}
+            >
+              <button
+                type="button"
+                className="dash-input"
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', background: '#fff', textAlign: 'left' }}
+              >
+                <span style={{ color: editKategori ? '#1a3252' : '#94a3b8' }}>
+                  {editKategori || 'Pilih salah satu'}
+                </span>
+                <DownOutlined style={{ fontSize: '12px', color: '#94a3b8' }} />
+              </button>
+            </Dropdown>
           </div>
           <div className="form-group">
             <label>Lokasi Spesifik</label>
