@@ -19,10 +19,24 @@ function ReportDetailView({ selectedReport, user, fetchReports, setActiveView, s
   }
 
   const handleDelete = async () => {
-    setShowDeleteModal(false);
-    await deleteReport(selectedReport.id);
-    await fetchReports();
-    setActiveView('daftar');
+    try {
+      setShowDeleteModal(false);
+      await deleteReport(selectedReport.id);
+      await fetchReports();
+      if (setModalState) {
+        setModalState({
+          isOpen: true,
+          title: 'Laporan Dibatalkan!',
+          message: 'Laporan Anda telah berhasil dibatalkan dan dihapus dari sistem.',
+          onCloseAction: () => setActiveView('daftar'),
+        });
+      } else {
+        setActiveView('daftar');
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Gagal membatalkan laporan');
+    }
   };
 
   return (
