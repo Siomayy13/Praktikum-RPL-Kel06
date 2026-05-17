@@ -72,8 +72,20 @@ body {
     color: var(--text-gray);
     font-weight: 500;
     font-size: 0.95rem;
-    transition: color 0.2s ease;
+    transition: color 0.3s ease;
     position: relative;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.nav-link::before {
+    display: block;
+    content: attr(title);
+    font-weight: 700;
+    height: 0;
+    overflow: hidden;
+    visibility: hidden;
 }
 
 .nav-link:hover,
@@ -82,15 +94,22 @@ body {
     font-weight: 700;
 }
 
-.nav-link.active::after {
+.nav-link::after {
     content: '';
     position: absolute;
     bottom: -6px;
-    left: 0;
-    width: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0%;
     height: 2px;
     background-color: #3182ce;
     border-radius: 2px;
+    transition: width 0.3s ease-in-out;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+    width: 100%;
 }
 
 .nav-auth {

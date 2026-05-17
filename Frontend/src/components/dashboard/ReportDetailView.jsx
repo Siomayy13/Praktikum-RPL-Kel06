@@ -87,7 +87,7 @@ function ReportDetailView({ selectedReport, user, fetchReports, setActiveView, s
               <i className="fas fa-pen"></i> Edit Laporan
             </button>
             <button className="btn-delete-report" style={{ flex: 1, justifyContent: 'center' }} onClick={() => setShowDeleteModal(true)}>
-              <i className="fas fa-trash-alt"></i> Hapus Laporan
+              <i className="fas fa-trash-alt"></i> Batalkan Laporan
             </button>
           </div>
 
@@ -125,8 +125,8 @@ function ReportDetailView({ selectedReport, user, fetchReports, setActiveView, s
           <div className="delete-modal-content">
             <div className="delete-modal-icon"><i className="fas fa-trash-alt"></i></div>
             <h2 className="delete-modal-title">Hapus Laporan?</h2>
-            <p className="delete-modal-text">Apakah Anda yakin ingin menghapus laporan ini? Tindakan ini tidak dapat dibatalkan.</p>
-            <button className="delete-modal-btn-confirm" onClick={handleDelete}>Hapus</button>
+            <p className="delete-modal-text">Apakah Anda yakin ingin menghapus laporan ini?<br />Tindakan ini tidak dapat dibatalkan.</p>
+            <button className="delete-modal-btn-confirm" onClick={handleDelete}>Batalkan laporan</button>
             <button className="delete-modal-btn-cancel" onClick={() => setShowDeleteModal(false)}>Batal</button>
           </div>
         </div>
