@@ -1,0 +1,106 @@
+/*
+ * Design Tokens — single source of truth for all visual values.
+ * Import this file first in any CSS entry point.
+ *
+ * Naming convention: --[category]-[variant]
+ */
+
+:root {
+    /* ─── Brand Colors ─────────────────────────────── */
+    --color-primary:        #1a3252;
+    --color-primary-medium: #274b7a;
+    --color-primary-light:  #2c4c7c;
+
+    /* ─── Teal / Success ────────────────────────────── */
+    --color-teal:           #0f766e;
+    --color-teal-hover:     #0a5c56;
+    --color-teal-light:     #a5f3fc;
+    --color-teal-bg:        #f0fdf9;
+
+    /* ─── Landing Accent (different shade from dashboard) */
+    --color-accent:         #8ce6d8;
+    --color-accent-hover:   #75dec9;
+
+    /* ─── Status ────────────────────────────────────── */
+    --color-danger:         #b91c1c;
+    --color-danger-dark:    #991b1b;
+    --color-danger-bg:      #fee2e2;
+
+    --color-warning:        #c2410c;
+    --color-warning-bg:     #ffedd5;
+
+    --color-neutral:        #475569;
+    --color-neutral-bg:     #e2e8f0;
+
+    --color-purple:         #7e22ce;
+    --color-purple-bg:      #f3e8ff;
+
+    /* ─── Neutral / Surface ─────────────────────────── */
+    --color-white:          #ffffff;
+    --color-bg-page:        #f8fafc;
+    --color-bg-subtle:      #f1f5f9;
+    --color-border:         #e2e8f0;
+    --color-border-light:   #f1f5f9;
+
+    /* ─── Text ──────────────────────────────────────── */
+    --color-text-heading:   #1a3252;
+    --color-text-body:      #334155;
+    --color-text-muted:     #64748b;
+    --color-text-light:     #94a3b8;
+
+    /* ─── Admin Dark Surface ────────────────────────── */
+    --color-dark-navy:      #0d213b;
+
+    /* ─── Typography ────────────────────────────────── */
+    --font-family:          'Inter', sans-serif;
+    --font-size-xs:         0.75rem;   /* 12px */
+    --font-size-sm:         0.85rem;   /* ~14px */
+    --font-size-base:       0.95rem;   /* ~15px */
+    --font-size-md:         1rem;      /* 16px */
+    --font-size-lg:         1.2rem;
+    --font-size-xl:         1.5rem;
+    --font-size-2xl:        2rem;
+    --font-size-3xl:        2.5rem;
+
+    /* ─── Spacing ───────────────────────────────────── */
+    --space-1:  4px;
+    --space-2:  8px;
+    --space-3:  12px;
+    --space-4:  16px;
+    --space-5:  20px;
+    --space-6:  24px;
+    --space-8:  30px;
+    --space-10: 40px;
+
+    /* ─── Border Radius ─────────────────────────────── */
+    --radius-sm:   6px;
+    --radius-md:   8px;
+    --radius-lg:   12px;
+    --radius-xl:   16px;
+    --radius-2xl:  20px;
+    --radius-full: 9999px;
+
+    /* ─── Shadows ───────────────────────────────────── */
+    --shadow-sm:  0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-md:  0 4px 6px -1px rgba(0, 0, 0, 0.02);
+    --shadow-lg:  0 10px 25px -5px rgba(0, 0, 0, 0.05);
+    --shadow-xl:  0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+    /* ─── Z-index scale ─────────────────────────────── */
+    --z-base:     1;
+    --z-sidebar:  10;
+    --z-topbar:   20;
+    --z-modal:    9999;
+    --z-dropdown: 10000;
+
+    /* ─── Legacy aliases (for landing page compatibility) */
+    --primary-color:  #1a3252;
+    --primary-light:  #2c4c7c;
+    --accent-color:   #8ce6d8;
+    --accent-hover:   #75dec9;
+    --text-dark:      #1f2937;
+    --text-gray:      #6b7280;
+    --bg-light:       #f3f4f6;
+    --white:          #ffffff;
+    --border-color:   #e5e7eb;
+}

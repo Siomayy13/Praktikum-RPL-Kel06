@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Sidebar from '../components/sidebar';
 import { useReports } from '../hooks/useReports';
 import DashboardView from '../components/dashboard/DashboardView';
@@ -8,8 +8,10 @@ import CreateReportModal from '../components/dashboard/CreateReportModal';
 import '../styles/dashboard.css';
 
 function Dashboard() {
-  const [activeView, setActiveView] = useState('beranda');
+  const location = useLocation();
+  const [activeView, setActiveView] = useState(() => location.state?.view || 'beranda');
   const [user, setUser] = useState(() => JSON.parse(localStorage.getItem('user')));
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showBuatModal, setShowBuatModal] = useState(false);
   const [modalState, setModalState] = useState({ isOpen: false, title: '', message: '', onCloseAction: null });
   const { reports, stats, fetchReports } = useReports(user?.id);
@@ -25,7 +27,8 @@ function Dashboard() {
 
   // Intercept sidebar nav — daftar/detail go to /reports page
   const handleSidebarNav = (viewId) => {
-    if (viewId === 'daftar' || viewId === 'detail') navigate('/reports');
+    if (viewId === 'daftar') navigate('/reports');
+    else if (viewId === 'detail') navigate('/reports', { state: { initialView: 'detail' } });
     else setActiveView(viewId);
   };
 
@@ -47,11 +50,14 @@ function Dashboard() {
 
   return (
     <div className="dashboard-layout">
-      <Sidebar activeView={activeView} setActiveView={handleSidebarNav} handleLogout={handleLogout} onBuatLaporan={() => setShowBuatModal(true)} />
+      <Sidebar activeView={activeView} setActiveView={handleSidebarNav} handleLogout={handleLogout} onBuatLaporan={() => setShowBuatModal(true)} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <div className="main-wrapper">
         <div className="topbar">
           <div className="topbar-left">
+            <button className="hamburger-btn" onClick={() => setSidebarOpen(true)}>
+              <i className="fas fa-bars"></i>
+            </button>
             <div className="topbar-logo-mobile">lapor.in</div>
           </div>
           <div className="topbar-user" onClick={() => setActiveView('profil')} style={{ cursor: 'pointer' }}>

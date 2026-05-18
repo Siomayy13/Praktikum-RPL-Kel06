@@ -9,9 +9,32 @@ function CreateReportModal({ userId, onClose, onSuccess }) {
     title: '', category: '', location: '', description: '', photo: null,
   });
   const [submitting, setSubmitting] = useState(false);
+  const [formError, setFormError] = useState('');
+  const [photoError, setPhotoError] = useState('');
+  const [isDragging, setIsDragging] = useState(false);
+
+  const handlePhotoSelect = (file) => {
+    if (!file) return;
+    const allowed = ['image/jpeg', 'image/jpg', 'image/png'];
+    if (!allowed.includes(file.type)) {
+      setPhotoError('Hanya file JPEG, JPG, dan PNG yang bisa diunggah');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setPhotoError('Gambar maksimal berukuran 5MB');
+      return;
+    }
+    setPhotoError('');
+    setForm((prev) => ({ ...prev, photo: file }));
+  };
 
   const handleSubmit = async () => {
     if (submitting) return;
+    if (!form.title.trim() || !form.category || !form.location.trim() || !form.description.trim() || !form.photo) {
+      setFormError('Lengkapi data untuk melapor');
+      return;
+    }
+    setFormError('');
     setSubmitting(true);
     try {
       const formData = new FormData();
@@ -115,8 +138,11 @@ function CreateReportModal({ userId, onClose, onSuccess }) {
             <div className="buat-modal-field">
               <label>Foto Bukti</label>
               <div
-                className="buat-modal-upload"
+                className={`buat-modal-upload${isDragging ? ' dragging' : ''}`}
                 onClick={() => document.getElementById('buatModalFileInput').click()}
+                onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+                onDragLeave={() => setIsDragging(false)}
+                onDrop={(e) => { e.preventDefault(); setIsDragging(false); handlePhotoSelect(e.dataTransfer.files[0]); }}
               >
                 {form.photo ? (
                   <img
@@ -126,21 +152,28 @@ function CreateReportModal({ userId, onClose, onSuccess }) {
                   />
                 ) : (
                   <>
-                    <div className="buat-modal-upload-icon"><i className="fas fa-upload"></i></div>
-                    <span className="buat-modal-upload-title">Klik atau drag & drop</span>
-                    <span className="buat-modal-upload-hint">JPG, PNG, WEBP · Maks 5MB</span>
+                    <div className="buat-modal-upload-icon">
+                      <i className={isDragging ? 'fas fa-download' : 'fas fa-upload'}></i>
+                    </div>
+                    <span className="buat-modal-upload-title">{isDragging ? 'Lepas untuk mengunggah' : 'Klik atau drag & drop'}</span>
+                    <span className="buat-modal-upload-hint">JPEG, JPG, dan PNG · Maks 5MB</span>
                   </>
                 )}
               </div>
               <input
                 id="buatModalFileInput"
                 type="file"
-                accept="image/*"
+                accept="image/jpeg,image/jpg,image/png"
                 style={{ display: 'none' }}
-                onChange={(e) => setForm({ ...form, photo: e.target.files[0] })}
+                onChange={(e) => handlePhotoSelect(e.target.files[0])}
               />
+              {photoError && (
+                <div style={{ color: '#b91c1c', fontSize: '0.8rem', marginTop: '6px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <i className="fas fa-circle-exclamation"></i> {photoError}
+                </div>
+              )}
               {form.photo && (
-                <button className="buat-modal-remove-photo" onClick={() => setForm({ ...form, photo: null })}>
+                <button className="buat-modal-remove-photo" onClick={() => { setForm({ ...form, photo: null }); setPhotoError(''); }}>
                   <i className="fas fa-times"></i> Hapus foto
                 </button>
               )}
@@ -149,6 +182,11 @@ function CreateReportModal({ userId, onClose, onSuccess }) {
         </div>
 
         <div className="buat-modal-footer">
+          {formError && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#b91c1c', fontSize: '0.82rem', fontWeight: 600, flex: 1 }}>
+              <i className="fas fa-circle-exclamation"></i> {formError}
+            </div>
+          )}
           <button className="buat-modal-btn-cancel" onClick={onClose}>Batal</button>
           <button className="buat-modal-btn-submit" onClick={handleSubmit} disabled={submitting}>
             <i className={submitting ? 'fas fa-spinner fa-spin' : 'fas fa-paper-plane'}></i>

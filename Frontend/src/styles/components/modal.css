@@ -1,0 +1,268 @@
+/* ─────────────────────────────────────────────────────────
+ * Modals
+ * Generic overlay, delete-confirmation modal, and the
+ * create/edit report full-page modal.
+ * ───────────────────────────────────────────────────────── */
+
+/* ── Shared entrance animation ────────────────────────── */
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: translateY(-16px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ── Generic overlay (success / logout modals) ────────── */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    backdrop-filter: blur(2px);
+}
+
+/* ── Delete confirmation modal ────────────────────────── */
+.delete-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    padding: 20px;
+}
+
+.delete-modal-content {
+    background-color: white;
+    width: 100%;
+    max-width: 380px;
+    border-radius: 16px;
+    padding: 40px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+.delete-modal-icon {
+    width: 64px;
+    height: 64px;
+    background-color: #fee2e2;
+    color: #b91c1c;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8rem;
+    margin: 0 auto 20px auto;
+}
+
+.delete-modal-title {
+    color: #0f172a;
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+}
+
+.delete-modal-text {
+    color: #64748b;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 24px;
+    padding: 0 10px;
+}
+
+.delete-modal-btn-confirm {
+    background-color: #b91c1c;
+    color: white;
+    border: none;
+    padding: 14px;
+    width: 100%;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-bottom: 12px;
+    transition: background-color 0.2s;
+}
+
+.delete-modal-btn-confirm:hover {
+    background-color: #991b1b;
+}
+
+.delete-modal-btn-cancel {
+    background-color: transparent;
+    color: #475569;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    font-weight: bold;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.delete-modal-btn-cancel:hover {
+    color: #1e293b;
+    text-decoration: underline;
+}
+
+/* ── Photo lightbox ───────────────────────────────────── */
+.photo-lightbox-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    cursor: zoom-out;
+    padding: 40px;
+}
+
+.photo-lightbox-img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 12px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+    object-fit: contain;
+    animation: modalFadeIn 0.2s ease-out;
+}
+
+/* ── Create/Edit report modal ─────────────────────────── */
+.buat-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.45);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    padding: 20px;
+}
+
+.buat-modal {
+    background: white;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 860px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px -10px rgba(0, 0, 0, 0.25);
+    animation: modalFadeIn 0.2s ease-out;
+    overflow: hidden;
+}
+
+.buat-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 28px 32px 20px;
+    border-bottom: 1px solid #f1f5f9;
+    flex-shrink: 0;
+}
+
+.buat-modal-header h2 {
+    color: #1a3252;
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin: 0 0 4px 0;
+}
+
+.buat-modal-header p {
+    color: #64748b;
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+.buat-modal-close {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: color 0.2s, background 0.2s;
+    flex-shrink: 0;
+}
+
+.buat-modal-close:hover {
+    color: #1a3252;
+    background: #f1f5f9;
+}
+
+.buat-modal-body {
+    display: flex;
+    gap: 28px;
+    padding: 28px 32px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.buat-modal-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 0;
+}
+
+.buat-modal-right {
+    width: 240px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.buat-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 32px;
+    border-top: 1px solid #f1f5f9;
+    flex-shrink: 0;
+}
+
+/* ── Mobile breakpoint ────────────────────────────────── */
+@media (max-width: 768px) {
+    /* Create/edit report modal: full-screen bottom sheet */
+    .buat-modal-overlay {
+        padding: 0;
+        align-items: flex-end;
+    }
+
+    .buat-modal {
+        max-height: 92vh;
+        border-radius: 16px 16px 0 0;
+    }
+
+    .buat-modal-header {
+        padding: 20px 16px 16px;
+    }
+
+    .buat-modal-footer {
+        padding: 16px;
+    }
+
+    /* Delete modal */
+    .delete-modal-content {
+        padding: 28px 20px;
+    }
+
+    /* Lightbox: less padding on mobile */
+    .photo-lightbox-overlay {
+        padding: 16px;
+    }
+}

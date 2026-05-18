@@ -1,20 +1,22 @@
 export const getStatusClass = (status) => {
   switch (status?.toLowerCase()) {
-    case 'pending':  return 'status-terkirim';
-    case 'diproses': return 'status-diproses';
-    case 'ditolak':  return 'status-ditolak';
-    case 'selesai':  return 'status-selesai';
-    default:         return 'status-terkirim';
+    case 'pending':     return 'status-terkirim';
+    case 'diproses':    return 'status-diproses';
+    case 'ditolak':     return 'status-ditolak';
+    case 'selesai':     return 'status-selesai';
+    case 'dibatalkan':  return 'status-dibatalkan';
+    default:            return 'status-terkirim';
   }
 };
 
 export const getStatusText = (status) => {
   switch (status?.toLowerCase()) {
-    case 'pending':  return 'Pending';
-    case 'diproses': return 'Diproses';
-    case 'selesai':  return 'Selesai';
-    case 'ditolak':  return 'Ditolak';
-    default:         return status || 'Pending';
+    case 'pending':     return 'Pending';
+    case 'diproses':    return 'Diproses';
+    case 'selesai':     return 'Selesai';
+    case 'ditolak':     return 'Ditolak';
+    case 'dibatalkan':  return 'Dibatalkan';
+    default:            return status || 'Pending';
   }
 };
 

@@ -1,8 +1,38 @@
 import React, { useState } from 'react';
 import { getStatusClass, formatDate } from '../../utils/formatters';
+import { Dropdown } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
+
+const periodOptions = [
+  { value: 'semua',      label: 'Semua Waktu' },
+  { value: 'hari_ini',   label: 'Hari Ini' },
+  { value: 'minggu_ini', label: 'Minggu Ini' },
+  { value: 'bulan_ini',  label: 'Bulan Ini' },
+  { value: 'tahun_ini',  label: 'Tahun Ini' },
+];
+
+function filterByPeriod(reports, period) {
+  const now = new Date();
+  return reports.filter(r => {
+    const d = new Date(r.createdAt);
+    if (period === 'hari_ini') return d.toDateString() === now.toDateString();
+    if (period === 'minggu_ini') {
+      const start = new Date(now);
+      start.setDate(now.getDate() - now.getDay());
+      start.setHours(0, 0, 0, 0);
+      return d >= start;
+    }
+    if (period === 'bulan_ini') return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+    if (period === 'tahun_ini') return d.getFullYear() === now.getFullYear();
+    return true;
+  });
+}
 
 function ReportListView({ reports, onBuatLaporan, onViewDetail }) {
   const [searchQuery, setSearchQuery] = useState('');
+  const [filterKategori, setFilterKategori] = useState('semua');
+  const [filterStatus, setFilterStatus] = useState('semua');
+  const [filterTanggal, setFilterTanggal] = useState('semua');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 7;
 
@@ -10,26 +40,29 @@ function ReportListView({ reports, onBuatLaporan, onViewDetail }) {
   const diproses = reports.filter(r => r.status?.toLowerCase() === 'diproses').length;
   const selesai = reports.filter(r => r.status?.toLowerCase() === 'selesai').length;
 
-  const filtered = reports
-    .filter(r =>
-      r.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      r.location?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      r.category?.toLowerCase().includes(searchQuery.toLowerCase())
-    )
+  const resetPage = () => setCurrentPage(1);
+
+  const filtered = filterByPeriod(reports, filterTanggal)
+    .filter(r => {
+      const matchSearch =
+        r.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        r.location?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        r.category?.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchKategori = filterKategori === 'semua' || r.category?.toLowerCase() === filterKategori;
+      const matchStatus   = filterStatus === 'semua'   || r.status?.toLowerCase()   === filterStatus;
+      return matchSearch && matchKategori && matchStatus;
+    })
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+  const hasActiveFilter = filterKategori !== 'semua' || filterStatus !== 'semua' || filterTanggal !== 'semua';
 
   const totalPages = Math.ceil(filtered.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentReports = filtered.slice(startIndex, startIndex + itemsPerPage);
 
-  const handleSearch = (value) => {
-    setSearchQuery(value);
-    setCurrentPage(1);
-  };
-
   return (
     <>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
+      <div className="page-title-row">
         <h2 className="page-title" style={{ margin: 0 }}>Daftar Laporan Anda</h2>
         <button className="buat-modal-btn-submit" onClick={onBuatLaporan}>
           <i className="fas fa-plus"></i> Buat Laporan
@@ -70,17 +103,83 @@ function ReportListView({ reports, onBuatLaporan, onViewDetail }) {
       <div className="list-layout">
         <div className="list-main">
           <div className="table-container">
-            <div className="table-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h3>Riwayat Aktivitas</h3>
-              <div className="search-container" style={{ margin: '0 20px', flex: 1, maxWidth: '400px' }}>
+            <div className="table-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+              <h3 style={{ margin: 0 }}>Riwayat Aktivitas</h3>
+              <div className="search-container" style={{ margin: '0 16px', flex: 1, maxWidth: '380px' }}>
                 <i className="fas fa-search"></i>
                 <input
                   type="text"
                   className="search-input"
                   placeholder="Cari laporan..."
                   value={searchQuery}
-                  onChange={(e) => handleSearch(e.target.value)}
+                  onChange={(e) => { setSearchQuery(e.target.value); resetPage(); }}
                 />
+              </div>
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+                {/* Filter Tingkat Kerusakan */}
+                <Dropdown
+                  menu={{
+                    items: [
+                      { key: 'semua',  label: 'Semua Tingkat' },
+                      { key: 'ringan', label: 'Ringan' },
+                      { key: 'sedang', label: 'Sedang' },
+                      { key: 'berat',  label: 'Berat' },
+                    ],
+                    selectedKeys: [filterKategori],
+                    onClick: ({ key }) => { setFilterKategori(key); resetPage(); },
+                  }}
+                  trigger={['click']}
+                >
+                  <button type="button" className={`filter-btn${filterKategori !== 'semua' ? ' active' : ''}`} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    {filterKategori === 'semua' ? 'Kerusakan' : filterKategori.charAt(0).toUpperCase() + filterKategori.slice(1)}
+                    <DownOutlined style={{ fontSize: '10px' }} />
+                  </button>
+                </Dropdown>
+
+                {/* Filter Tanggal */}
+                <Dropdown
+                  menu={{
+                    items: periodOptions.map(o => ({ key: o.value, label: o.label })),
+                    selectedKeys: [filterTanggal],
+                    onClick: ({ key }) => { setFilterTanggal(key); resetPage(); },
+                  }}
+                  trigger={['click']}
+                >
+                  <button type="button" className={`filter-btn${filterTanggal !== 'semua' ? ' active' : ''}`} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    {periodOptions.find(o => o.value === filterTanggal)?.label}
+                    <DownOutlined style={{ fontSize: '10px' }} />
+                  </button>
+                </Dropdown>
+
+                {/* Filter Status */}
+                <Dropdown
+                  menu={{
+                    items: [
+                      { key: 'semua',      label: 'Semua Status' },
+                      { key: 'pending',    label: 'Pending' },
+                      { key: 'diproses',   label: 'Diproses' },
+                      { key: 'selesai',    label: 'Selesai' },
+                      { key: 'ditolak',    label: 'Ditolak' },
+                      { key: 'dibatalkan', label: 'Dibatalkan' },
+                    ],
+                    selectedKeys: [filterStatus],
+                    onClick: ({ key }) => { setFilterStatus(key); resetPage(); },
+                  }}
+                  trigger={['click']}
+                >
+                  <button type="button" className={`filter-btn${filterStatus !== 'semua' ? ' active' : ''}`} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    {filterStatus === 'semua' ? 'Status' : filterStatus.charAt(0).toUpperCase() + filterStatus.slice(1)}
+                    <DownOutlined style={{ fontSize: '10px' }} />
+                  </button>
+                </Dropdown>
+
+                {/* Reset */}
+                {hasActiveFilter && (
+                  <button type="button" className="filter-btn" style={{ color: '#b91c1c', borderColor: '#fca5a5' }}
+                    onClick={() => { setFilterKategori('semua'); setFilterStatus('semua'); setFilterTanggal('semua'); resetPage(); }}>
+                    <i className="fas fa-xmark" style={{ marginRight: '4px' }}></i> Reset
+                  </button>
+                )}
               </div>
             </div>
 

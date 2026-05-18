@@ -363,6 +363,38 @@
     gap: 6px;
 }
 
+@media (max-width: 480px) {
+    .login-page {
+        padding-top: 24px;
+    }
+
+    .login-card {
+        padding: 24px 20px;
+    }
+
+    .login-card-container {
+        padding: 0 12px;
+    }
+
+    .login-features {
+        gap: 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .login-footer {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .login-footer-right {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+}
+
 /* FIX icon mata dobel */
 input[type="password"]::-ms-reveal,
 input[type="password"]::-ms-clear {

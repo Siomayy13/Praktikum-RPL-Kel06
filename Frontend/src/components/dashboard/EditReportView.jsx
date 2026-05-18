@@ -7,6 +7,24 @@ import { DownOutlined } from '@ant-design/icons';
 function EditReportView({ selectedReport, setSelectedReport, fetchReports, setActiveView, setModalState }) {
   const [editData, setEditData] = useState({ title: '', category: '', location: '', description: '', photo: null });
   const [editKategori, setEditKategori] = useState('');
+  const [updating, setUpdating] = useState(false);
+  const [photoError, setPhotoError] = useState('');
+  const [isDragging, setIsDragging] = useState(false);
+
+  const handlePhotoSelect = (file) => {
+    if (!file) return;
+    const allowed = ['image/jpeg', 'image/jpg', 'image/png'];
+    if (!allowed.includes(file.type)) {
+      setPhotoError('Hanya file JPEG, JPG, dan PNG yang bisa diunggah');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setPhotoError('Gambar maksimal berukuran 5MB');
+      return;
+    }
+    setPhotoError('');
+    setEditData((prev) => ({ ...prev, photo: file }));
+  };
 
   useEffect(() => {
     if (selectedReport) {
@@ -35,6 +53,8 @@ function EditReportView({ selectedReport, setSelectedReport, fetchReports, setAc
   }
 
   const handleUpdate = async () => {
+    if (updating) return;
+    setUpdating(true);
     try {
       const formData = new FormData();
       formData.append('title', editData.title);
@@ -62,6 +82,8 @@ function EditReportView({ selectedReport, setSelectedReport, fetchReports, setAc
     } catch (err) {
       console.error(err);
       alert('Gagal update');
+    } finally {
+      setUpdating(false);
     }
   };
 
@@ -134,17 +156,30 @@ function EditReportView({ selectedReport, setSelectedReport, fetchReports, setAc
         <label style={{ fontSize: '0.75rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '12px', display: 'block' }}>
           Dokumentasi Pendukung (Foto)
         </label>
-        <div className="upload-box" onClick={() => document.getElementById('editPhotoInput').click()} style={{ cursor: 'pointer' }}>
-          <div className="upload-icon"><i className="fas fa-upload"></i></div>
-          <h4>Pilih foto atau tarik ke sini</h4>
-          <p>Mendukung JPG, PNG, atau HEIC (Maksimal 5MB)</p>
+        <div
+          className={`upload-box${isDragging ? ' dragging' : ''}`}
+          onClick={() => document.getElementById('editPhotoInput').click()}
+          onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+          onDragLeave={() => setIsDragging(false)}
+          onDrop={(e) => { e.preventDefault(); setIsDragging(false); handlePhotoSelect(e.dataTransfer.files[0]); }}
+          style={{ cursor: 'pointer' }}
+        >
+          <div className="upload-icon"><i className={isDragging ? 'fas fa-download' : 'fas fa-upload'}></i></div>
+          <h4>{isDragging ? 'Lepas untuk mengunggah' : 'Pilih foto atau tarik ke sini'}</h4>
+          <p>Mendukung JPG, PNG, atau WEBP (Maksimal 5MB)</p>
           <input
             id="editPhotoInput"
             type="file"
+            accept="image/jpeg,image/jpg,image/png"
             style={{ display: 'none' }}
-            onChange={(e) => setEditData({ ...editData, photo: e.target.files[0] })}
+            onChange={(e) => handlePhotoSelect(e.target.files[0])}
           />
         </div>
+        {photoError && (
+          <div style={{ color: '#b91c1c', fontSize: '0.8rem', marginTop: '8px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <i className="fas fa-circle-exclamation"></i> {photoError}
+          </div>
+        )}
         <div className="upload-preview-grid">
           {editData.photo ? (
             <div className="preview-box">
@@ -161,8 +196,11 @@ function EditReportView({ selectedReport, setSelectedReport, fetchReports, setAc
       </div>
 
       <div className="form-actions">
-        <button className="btn-cancel" onClick={() => setActiveView('detail')}>Batalkan</button>
-        <button className="btn-submit" onClick={handleUpdate}>Update</button>
+        <button className="btn-cancel" onClick={() => setActiveView('detail')} disabled={updating}>Batalkan</button>
+        <button className="btn-submit" onClick={handleUpdate} disabled={updating}>
+          <i className={updating ? 'fas fa-spinner fa-spin' : 'fas fa-floppy-disk'}></i>
+          {updating ? ' Menyimpan...' : ' Update'}
+        </button>
       </div>
     </>
   );

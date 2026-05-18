@@ -1,0 +1,318 @@
+/* ─────────────────────────────────────────────────────────
+ * Forms
+ * Generic form layout, input fields, upload boxes, and
+ * all form-related elements used in dashboard pages and
+ * the create/edit report modal.
+ * ───────────────────────────────────────────────────────── */
+
+/* ── Page-level form headings ─────────────────────────── */
+.page-title {
+    color: #1a3252;
+    font-size: 2rem;
+    font-weight: 800;
+    margin: 0 0 8px 0;
+}
+
+.page-desc {
+    color: #64748b;
+    font-size: 1rem;
+    margin: 0 0 30px 0;
+}
+
+/* ── Form card wrapper ────────────────────────────────── */
+.form-card {
+    background-color: white;
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+    margin-bottom: 20px;
+}
+
+/* ── Field layout ─────────────────────────────────────── */
+.form-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.form-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+}
+
+/* ── Base inputs (edit report page) ──────────────────── */
+.dash-input,
+.dash-select,
+.dash-textarea {
+    width: 100%;
+    padding: 16px;
+    background-color: #f8fafc;
+    border: 1px solid #f1f5f9;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: #334155;
+    outline: none;
+    font-family: 'Inter', sans-serif;
+}
+
+.dash-textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.dash-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 16px;
+}
+
+/* ── Photo upload box (edit report page) ──────────────── */
+.upload-box {
+    border: 1px dashed #cbd5e1;
+    border-radius: 12px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.upload-box:hover {
+    background-color: #f8fafc;
+    border-color: #94a3b8;
+}
+
+.upload-box.dragging {
+    border-color: #0f766e;
+    background-color: #f0fdf9;
+}
+
+.upload-icon {
+    width: 48px;
+    height: 48px;
+    background-color: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    color: #1a3252;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.upload-box h4 {
+    color: #1a3252;
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+}
+
+.upload-box p {
+    color: #94a3b8;
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+.upload-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.preview-box {
+    aspect-ratio: 1;
+    background-color: #f8fafc;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #cbd5e1;
+    font-size: 1.5rem;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 20px;
+    padding-top: 20px;
+}
+
+/* ── Modal form fields (create/edit report modal) ─────── */
+.buat-modal-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.buat-modal-field label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.buat-modal-row {
+    display: flex;
+    gap: 16px;
+}
+
+.buat-modal-row .buat-modal-field {
+    flex: 1;
+}
+
+.buat-modal-input {
+    width: 100%;
+    padding: 12px 14px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: #334155;
+    outline: none;
+    font-family: 'Inter', sans-serif;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+
+.buat-modal-input:focus {
+    border-color: #1a3252;
+    background: white;
+}
+
+.buat-modal-textarea {
+    width: 100%;
+    min-height: 110px;
+    padding: 12px 14px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: #334155;
+    outline: none;
+    font-family: 'Inter', sans-serif;
+    resize: vertical;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+
+.buat-modal-textarea:focus {
+    border-color: #1a3252;
+    background: white;
+}
+
+/* ── Modal photo upload area ──────────────────────────── */
+.buat-modal-upload {
+    width: 100%;
+    height: 200px;
+    border: 1.5px dashed #cbd5e1;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    background: #f8fafc;
+    transition: border-color 0.2s, background 0.2s;
+    overflow: hidden;
+}
+
+.buat-modal-upload:hover {
+    border-color: #1a3252;
+    background: #f1f5f9;
+}
+
+.buat-modal-upload.dragging {
+    border-color: #0f766e;
+    background: #f0fdf9;
+}
+
+.buat-modal-upload-icon {
+    width: 44px;
+    height: 44px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    color: #1a3252;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.buat-modal-upload-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #1a3252;
+}
+
+.buat-modal-upload-hint {
+    font-size: 0.75rem;
+    color: #94a3b8;
+}
+
+.buat-modal-remove-photo {
+    background: none;
+    border: none;
+    color: #b91c1c;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0;
+}
+
+/* ── Mobile breakpoint ────────────────────────────────── */
+@media (max-width: 768px) {
+    /* Stack side-by-side field rows */
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .form-card {
+        padding: 20px;
+    }
+
+    /* Modal form: single column layout */
+    .buat-modal-body {
+        flex-direction: column;
+        padding: 20px 16px;
+        gap: 16px;
+    }
+
+    .buat-modal-right {
+        width: 100%;
+    }
+
+    .buat-modal-row {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .buat-modal-upload {
+        height: 160px;
+    }
+}

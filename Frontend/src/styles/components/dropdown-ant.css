@@ -1,0 +1,137 @@
+/* ─────────────────────────────────────────────────────────
+ * Dropdown Overrides
+ * Ant Design dropdown theming + legacy custom dropdown
+ * and status dropdown (kept for backwards compatibility).
+ * ───────────────────────────────────────────────────────── */
+
+/* ── Ant Design global override ───────────────────────── */
+/* Must be above .modal-overlay z-index (9999) */
+.ant-dropdown {
+    z-index: 10000 !important;
+}
+
+.ant-dropdown .ant-dropdown-menu {
+    border-radius: 10px;
+    padding: 6px;
+    box-shadow: 0 8px 24px rgba(26, 50, 82, 0.12);
+    border: 1px solid #e2e8f0;
+}
+
+.ant-dropdown .ant-dropdown-menu-item {
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #475569;
+    padding: 8px 14px;
+}
+
+.ant-dropdown .ant-dropdown-menu-item:hover {
+    background-color: #f1f5f9 !important;
+    color: #1a3252;
+}
+
+.ant-dropdown .ant-dropdown-menu-item-selected {
+    background-color: #1a3252 !important;
+    color: white !important;
+    font-weight: 700;
+}
+
+.ant-dropdown .ant-dropdown-menu-item-selected:hover {
+    background-color: #274b7a !important;
+    color: white !important;
+}
+
+/* ── Legacy: custom select dropdown ──────────────────── */
+.custom-select-container {
+    position: relative;
+    width: 100%;
+}
+
+.custom-select-trigger {
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: center;
+}
+
+.custom-select-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    width: 100%;
+    background: white;
+    border-radius: 16px;
+    padding: 8px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    border: 1px solid #f1f5f9;
+}
+
+.custom-select-option {
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #000;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.custom-select-option:hover,
+.custom-select-option.selected {
+    background-color: #e0f2fe;
+}
+
+/* ── Legacy: status dropdown (admin detail) ───────────── */
+.status-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    min-width: 180px;
+    background: white;
+    border-radius: 14px;
+    padding: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    z-index: 10;
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.status-dropdown-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #b91c1c;
+}
+
+.status-dropdown-item .status-dot {
+    background-color: #b91c1c;
+    transition: all 0.2s;
+}
+
+.status-dropdown-item:hover {
+    background-color: #e6fcf5;
+    color: #0f766e;
+}
+
+.status-dropdown-item:hover .status-dot {
+    background-color: #0f766e;
+}
+
+.status-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}

@@ -12,6 +12,7 @@ import '../styles/dashboard.css';
 function AdminDashboard() {
   const [activeView, setActiveView] = useState('beranda');
   const [user, setUser] = useState(() => JSON.parse(localStorage.getItem('admin')));
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedReport, setSelectedReport] = useState(null);
   const [modalState, setModalState] = useState({ isOpen: false, title: '', message: '', onCloseAction: null });
   const { reports, fetchReports } = useAdminReports();
@@ -35,13 +36,21 @@ function AdminDashboard() {
     setActiveView('detail');
   };
 
+  const handleSidebarNav = (viewId) => {
+    if (viewId === 'detail') setSelectedReport(null);
+    setActiveView(viewId);
+  };
+
   return (
     <div className="dashboard-layout">
-      <Sidebar activeView={activeView} setActiveView={setActiveView} handleLogout={handleLogout} role="admin" />
+      <Sidebar activeView={activeView} setActiveView={handleSidebarNav} handleLogout={handleLogout} role="admin" isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <div className="main-wrapper">
         <div className="topbar">
           <div className="topbar-left">
+            <button className="hamburger-btn" onClick={() => setSidebarOpen(true)}>
+              <i className="fas fa-bars"></i>
+            </button>
             <div className="topbar-logo-mobile">lapor.in</div>
           </div>
           <div className="topbar-user" onClick={() => setActiveView('profil')} style={{ cursor: 'pointer' }}>
@@ -62,7 +71,7 @@ function AdminDashboard() {
             <AdminReportListView reports={reports} onViewDetail={handleViewDetail} />
           )}
           {activeView === 'detail' && (
-            <AdminReportDetailView selectedReport={selectedReport} setSelectedReport={setSelectedReport} user={user} fetchReports={fetchReports} setActiveView={setActiveView} />
+            <AdminReportDetailView selectedReport={selectedReport} setSelectedReport={setSelectedReport} user={user} fetchReports={fetchReports} setActiveView={setActiveView} setModalState={setModalState} />
           )}
           {activeView === 'statistik' && (
             <AdminStatistikView reports={reports} />

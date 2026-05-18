@@ -1,0 +1,160 @@
+/* ─────────────────────────────────────────────────────────
+ * Report Detail Page
+ * Detail card, meta info, location, and help panel.
+ * Shared by both user and admin detail views.
+ * ───────────────────────────────────────────────────────── */
+
+/* ── Action button row ────────────────────────────────── */
+.detail-header-actions {
+    display: flex;
+    gap: 12px;
+}
+
+/* ── Detail card ──────────────────────────────────────── */
+.detail-card {
+    background-color: white;
+    border-radius: 16px;
+    padding: 30px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+}
+
+.detail-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+}
+
+.detail-title {
+    color: #1a3252;
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin: 12px 0;
+}
+
+/* ── Meta row ─────────────────────────────────────────── */
+.detail-meta {
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.detail-meta strong {
+    color: #334155;
+}
+
+/* ── Category badge (top-right of card) ──────────────── */
+.detail-category {
+    text-align: right;
+}
+
+.detail-category span {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.detail-category strong {
+    color: #1a3252;
+    font-weight: 700;
+}
+
+/* ── Section label ────────────────────────────────────── */
+.detail-section-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+}
+
+/* ── Description box ──────────────────────────────────── */
+.detail-box {
+    background-color: #f8fafc;
+    border-radius: 12px;
+    padding: 24px;
+    color: #475569;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 24px;
+}
+
+/* ── Location detail ──────────────────────────────────── */
+.loc-detail {
+    display: flex;
+    flex-direction: column;
+}
+
+.loc-detail span {
+    color: #0f766e;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.loc-detail strong {
+    color: #1a3252;
+    font-size: 1rem;
+    margin-bottom: 2px;
+}
+
+.loc-detail p {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* ── Help panel (side) ────────────────────────────────── */
+.help-text {
+    font-size: 0.85rem;
+    color: #64748b;
+    line-height: 1.5;
+    margin-bottom: 16px;
+}
+
+.help-phone {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #0f766e;
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+/* ── Mobile breakpoint ────────────────────────────────── */
+@media (max-width: 768px) {
+    .detail-card {
+        padding: 16px;
+    }
+
+    /* Stack status badge + category info */
+    .detail-top {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .detail-category {
+        text-align: left;
+    }
+
+    .detail-title {
+        font-size: 1.2rem;
+    }
+
+    /* Stack action buttons full-width */
+    .detail-header-actions {
+        flex-direction: column;
+    }
+
+    .detail-header-actions > * {
+        width: 100%;
+        justify-content: center;
+    }
+}

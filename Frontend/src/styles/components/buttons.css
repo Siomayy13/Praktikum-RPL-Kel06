@@ -1,0 +1,215 @@
+/* ─────────────────────────────────────────────────────────
+ * Buttons
+ * All button variants used across dashboard pages.
+ * ───────────────────────────────────────────────────────── */
+
+/* ── Banner / Hero buttons ────────────────────────────── */
+.btn-banner-primary {
+    background-color: #a5f3fc;
+    color: #0f766e;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-banner-secondary {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+
+/* ── Inline / text buttons ────────────────────────────── */
+.btn-link {
+    color: #1a3252;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+.btn-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #1a3252;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    cursor: pointer;
+    float: right;
+}
+
+/* ── Form action buttons ──────────────────────────────── */
+.btn-cancel {
+    background: none;
+    border: none;
+    color: #64748b;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+
+.btn-submit {
+    background-color: #1a3252;
+    color: white;
+    border: none;
+    padding: 16px 32px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+/* ── Report detail action buttons ─────────────────────── */
+.btn-edit-report {
+    background-color: white;
+    color: #0f766e;
+    border: 1px solid #e2e8f0;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.btn-edit-report:hover {
+    background-color: #f0fdf9;
+    border-color: #0f766e;
+    color: #0a5c56;
+}
+
+.btn-delete-report {
+    background-color: #b91c1c;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    transition: background-color 0.2s ease;
+}
+
+.btn-delete-report:hover {
+    background-color: #991b1b;
+}
+
+/* ── Admin utility button ─────────────────────────────── */
+.btn-dark-blue {
+    background-color: #1a3252;
+    color: white;
+    border: none;
+    padding: 14px 24px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ── Profile page buttons ─────────────────────────────── */
+.btn-profile-primary {
+    background: #1a3252;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 16px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-profile-primary:hover {
+    background: #274b7a;
+}
+
+.btn-profile-secondary {
+    background: #a5f3fc;
+    color: #0f766e;
+    border: none;
+    border-radius: 8px;
+    padding: 16px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-profile-secondary:hover {
+    background: #67e8f9;
+}
+
+/* ── Create/Edit report modal buttons ─────────────────── */
+.buat-modal-btn-cancel {
+    background: none;
+    border: 1px solid #e2e8f0;
+    color: #64748b;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.buat-modal-btn-cancel:hover {
+    background: #f1f5f9;
+}
+
+.buat-modal-btn-submit {
+    background: #1a3252;
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s;
+}
+
+.buat-modal-btn-submit:hover {
+    background: #274b7a;
+}
+
+/* ── Mobile breakpoint ────────────────────────────────── */
+@media (max-width: 768px) {
+    /* Make modal footer buttons full-width on mobile */
+    .buat-modal-btn-cancel,
+    .buat-modal-btn-submit {
+        flex: 1;
+        justify-content: center;
+    }
+}

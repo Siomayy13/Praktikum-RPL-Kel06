@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
 import { updateReport, deleteReport } from '../../api/api';
 import { getStatusClass } from '../../utils/formatters';
-import { Dropdown } from 'antd';
+import { Dropdown, message } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 
 const formatTanggal = (date) =>
   new Date(date).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) + ' WIB';
 
-function AdminReportDetailView({ selectedReport, setSelectedReport, user, fetchReports, setActiveView }) {
+function AdminReportDetailView({ selectedReport, setSelectedReport, user, fetchReports, setActiveView, setModalState }) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [photoPreview, setPhotoPreview] = useState(false);
+  const [updatingStatus, setUpdatingStatus] = useState(null); // key status yang sedang diupdate
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [messageApi, contextHolder] = message.useMessage();
 
   if (!selectedReport) {
     return (
@@ -24,6 +29,8 @@ function AdminReportDetailView({ selectedReport, setSelectedReport, user, fetchR
   }
 
   const handleUpdateStatus = async (newStatus) => {
+    if (updatingStatus) return;
+    setUpdatingStatus(newStatus);
     try {
       const formData = new FormData();
       formData.append('title', selectedReport.title || '');
@@ -36,26 +43,43 @@ function AdminReportDetailView({ selectedReport, setSelectedReport, user, fetchR
       const updatedResponse = await updateReport(selectedReport.id, formData);
       await fetchReports();
       if (updatedResponse?.data) setSelectedReport(updatedResponse.data);
+      setDropdownOpen(false);
+      messageApi
+        .open({ type: 'loading', content: 'Memperbarui status laporan...', duration: 1 })
+        .then(() => messageApi.success(`Status berhasil diubah ke "${newStatus.charAt(0).toUpperCase() + newStatus.slice(1)}"`, 2));
     } catch (err) {
       console.error(err);
-      alert('Gagal mengupdate status laporan');
+      messageApi
+        .open({ type: 'loading', content: 'Memperbarui status laporan...', duration: 0.5 })
+        .then(() => messageApi.error('Gagal mengupdate status laporan', 2));
+    } finally {
+      setUpdatingStatus(null);
     }
   };
 
   const handleDelete = async () => {
     try {
-      setShowDeleteModal(false);
+      setDeleting(true);
       await deleteReport(selectedReport.id);
       await fetchReports();
-      setActiveView('kelola');
+      setShowDeleteModal(false);
+      setModalState({
+        isOpen: true,
+        title: 'Laporan Dihapus',
+        message: 'Laporan telah berhasil dihapus permanen dari sistem.',
+        onCloseAction: () => setActiveView('kelola'),
+      });
     } catch (err) {
       console.error(err);
       alert('Gagal menghapus laporan');
+    } finally {
+      setDeleting(false);
     }
   };
 
   return (
     <>
+      {contextHolder}
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#64748b', fontSize: '0.9rem', marginBottom: '24px' }}>
         <span style={{ cursor: 'pointer' }} onClick={() => setActiveView('kelola')}>Daftar Laporan</span>
         <i className="fas fa-chevron-right" style={{ fontSize: '0.6rem' }}></i>
@@ -102,7 +126,12 @@ function AdminReportDetailView({ selectedReport, setSelectedReport, user, fetchR
             <div className="detail-section-title">Bukti Foto</div>
             <div style={{ minHeight: '150px' }}>
               {selectedReport.photo ? (
-                <img src={selectedReport.photo} alt="Bukti" style={{ width: '100%', borderRadius: '12px', marginTop: '16px', objectFit: 'cover' }} />
+                <img
+                  src={selectedReport.photo}
+                  alt="Bukti"
+                  style={{ width: '100%', borderRadius: '12px', marginTop: '16px', objectFit: 'cover', cursor: 'zoom-in' }}
+                  onClick={() => setPhotoPreview(true)}
+                />
               ) : (
                 <div style={{ width: '100%', height: '150px', backgroundColor: '#f8fafc', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#cbd5e1', marginTop: '16px' }}>
                   <i className="far fa-image" style={{ fontSize: '3rem' }}></i>
@@ -116,12 +145,14 @@ function AdminReportDetailView({ selectedReport, setSelectedReport, user, fetchR
           <div className="detail-header-actions" style={{ gap: '16px' }}>
             <div style={{ flex: 1 }}>
               <Dropdown
+                open={dropdownOpen}
+                onOpenChange={(val) => { if (!updatingStatus) setDropdownOpen(val); }}
                 menu={{
                   items: [
-                    { key: 'pending',  label: 'Pending',  icon: <i className="fas fa-clock"        style={{ color: '#475569' }} /> },
-                    { key: 'diproses', label: 'Diproses', icon: <i className="fas fa-gear"         style={{ color: '#c2410c' }} /> },
-                    { key: 'selesai',  label: 'Selesai',  icon: <i className="fas fa-circle-check" style={{ color: '#0f766e' }} /> },
-                    { key: 'ditolak',  label: 'Ditolak',  icon: <i className="fas fa-circle-xmark" style={{ color: '#b91c1c' }} />, danger: true },
+                    { key: 'pending',  label: 'Pending',  icon: updatingStatus === 'pending'  ? <i className="fas fa-spinner fa-spin" style={{ color: '#475569' }} /> : <i className="fas fa-clock"        style={{ color: '#475569' }} /> },
+                    { key: 'diproses', label: 'Diproses', icon: updatingStatus === 'diproses' ? <i className="fas fa-spinner fa-spin" style={{ color: '#c2410c' }} /> : <i className="fas fa-gear"         style={{ color: '#c2410c' }} /> },
+                    { key: 'selesai',  label: 'Selesai',  icon: updatingStatus === 'selesai'  ? <i className="fas fa-spinner fa-spin" style={{ color: '#0f766e' }} /> : <i className="fas fa-circle-check" style={{ color: '#0f766e' }} /> },
+                    { key: 'ditolak',  label: 'Ditolak',  icon: updatingStatus === 'ditolak'  ? <i className="fas fa-spinner fa-spin" style={{ color: '#b91c1c' }} /> : <i className="fas fa-circle-xmark" style={{ color: '#b91c1c' }} />, danger: true },
                   ],
                   onClick: ({ key }) => handleUpdateStatus(key),
                   selectedKeys: [selectedReport.status?.toLowerCase()],
@@ -174,14 +205,23 @@ function AdminReportDetailView({ selectedReport, setSelectedReport, user, fetchR
         </div>
       </div>
 
+      {photoPreview && (
+        <div className="photo-lightbox-overlay" onClick={() => setPhotoPreview(false)}>
+          <img src={selectedReport.photo} alt="preview" className="photo-lightbox-img" />
+        </div>
+      )}
+
       {showDeleteModal && (
         <div className="delete-modal-overlay">
           <div className="delete-modal-content">
             <div className="delete-modal-icon"><i className="fas fa-trash-alt"></i></div>
             <h2 className="delete-modal-title">Hapus Laporan?</h2>
             <p className="delete-modal-text">Apakah Anda yakin ingin menghapus laporan ini?<br />Tindakan ini tidak dapat dibatalkan.</p>
-            <button className="delete-modal-btn-confirm" onClick={handleDelete}>Hapus</button>
-            <button className="delete-modal-btn-cancel" onClick={() => setShowDeleteModal(false)}>Batal</button>
+            <button className="delete-modal-btn-confirm" onClick={handleDelete} disabled={deleting}>
+              <i className={deleting ? 'fas fa-spinner fa-spin' : 'fas fa-trash-alt'} style={{ marginRight: '6px' }}></i>
+              {deleting ? 'Menghapus...' : 'Hapus Permanen'}
+            </button>
+            <button className="delete-modal-btn-cancel" onClick={() => setShowDeleteModal(false)} disabled={deleting}>Batal</button>
           </div>
         </div>
       )}

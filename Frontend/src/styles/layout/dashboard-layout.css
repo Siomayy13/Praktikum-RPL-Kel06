@@ -1,0 +1,79 @@
+/* ─────────────────────────────────────────────────────────
+ * Dashboard Layout
+ * App shell: outer container, main wrapper, content area,
+ * list/side panel scaffold.
+ * ───────────────────────────────────────────────────────── */
+
+.dashboard-layout {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #f8fafc;
+    font-family: 'Inter', sans-serif;
+}
+
+/* ── Main content column ─────────────────────────────── */
+.main-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0; /* prevents flex blowout */
+}
+
+.content-area {
+    padding: 40px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+/* ── Detail / side-panel two-column scaffold ─────────── */
+.list-layout {
+    display: flex;
+    gap: 30px;
+}
+
+.list-main {
+    flex: 1;
+    min-width: 0;
+}
+
+.list-side {
+    width: 300px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ── Side panel card ─────────────────────────────────── */
+.side-panel {
+    background-color: #f1f5f9;
+    border-radius: 16px;
+    padding: 24px;
+}
+
+.side-panel h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #1a3252;
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0 0 20px 0;
+}
+
+/* ── Mobile breakpoint ────────────────────────────────── */
+@media (max-width: 768px) {
+    .content-area {
+        padding: 16px;
+    }
+
+    /* Stack detail + side panel vertically */
+    .list-layout {
+        flex-direction: column;
+    }
+
+    .list-side {
+        width: 100%;
+    }
+}

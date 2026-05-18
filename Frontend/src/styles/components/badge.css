@@ -1,0 +1,44 @@
+/* ─────────────────────────────────────────────────────────
+ * Status Badges
+ * Pill-shaped labels for report status values.
+ * ───────────────────────────────────────────────────────── */
+
+.badge-status {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-block;
+}
+
+.status-pending {
+    background-color: #e2e8f0;
+    color: #475569;
+}
+
+.status-terkirim {
+    background-color: #e2e8f0;
+    color: #475569;
+}
+
+.status-diproses {
+    background-color: #ffedd5;
+    color: #c2410c;
+}
+
+.status-selesai {
+    background-color: #a5f3fc;
+    color: #0f766e;
+}
+
+.status-ditolak {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
+.status-dibatalkan {
+    background-color: #f3e8ff;
+    color: #7e22ce;
+}

@@ -1,0 +1,514 @@
+/* ─────────────────────────────────────────────────────────
+ * Admin Dashboard Pages
+ * Beranda, Kelola Laporan header/stats, and Statistik
+ * charts (bar, donut, vertical bar).
+ * ───────────────────────────────────────────────────────── */
+
+/* ── Admin beranda header ─────────────────────────────── */
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 30px;
+}
+
+.admin-subtitle {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+
+.admin-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #1a3252;
+    margin: 0;
+}
+
+.admin-date-btn {
+    background-color: #f1f5f9;
+    color: #1a3252;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ── Admin stat cards ─────────────────────────────────── */
+.admin-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.admin-stat-card {
+    background-color: white;
+    border-radius: 16px;
+    padding: 30px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.admin-stat-icon-wrapper {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8rem;
+}
+
+.admin-stat-icon-wrapper.blue { background-color: #e0f2fe; color: #1a3252; }
+.admin-stat-icon-wrapper.red  { background-color: #fee2e2; color: #ef4444; }
+
+.admin-stat-label {
+    color: #64748b;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.admin-stat-value {
+    color: #1a3252;
+    font-size: 2.2rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+/* ── Kelola Laporan page ──────────────────────────────── */
+.admin-page-title {
+    color: #1a3252;
+    font-size: 2rem;
+    font-weight: 800;
+    margin: 0 0 24px 0;
+}
+
+.admin-workload-grid {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.workload-card-main {
+    flex: 1;
+    background-color: #0d213b;
+    border-radius: 12px;
+    padding: 36px 40px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.workload-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 48px 0;
+    line-height: 1.3;
+}
+
+.workload-stats {
+    display: flex;
+    gap: 120px;
+}
+
+.workload-stat-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.workload-label {
+    font-size: 0.75rem;
+    color: #64748b;
+    font-weight: 600;
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+}
+
+.workload-val {
+    font-size: 2.2rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.workload-card-side {
+    width: 250px;
+    background-color: white;
+    border-radius: 16px;
+    padding: 30px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.workload-side-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #94a3b8;
+    margin-bottom: 4px;
+}
+
+.workload-side-val {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #1a3252;
+    line-height: 1;
+}
+
+/* ── Statistik page layout ────────────────────────────── */
+.stats-layout {
+    display: flex;
+    gap: 20px;
+}
+
+.stats-main { flex: 2; }
+.stats-side  { flex: 1; }
+
+.stats-row {
+    display: flex;
+    gap: 20px;
+}
+
+/* ── Stat cards (statistik view) ──────────────────────── */
+.stat-card-white {
+    flex: 1;
+    background-color: white;
+    border-radius: 16px;
+    padding: 30px;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card-dark {
+    flex: 1;
+    background-color: #1a3252;
+    border-radius: 16px;
+    padding: 30px;
+    color: white;
+}
+
+.stat-card-side {
+    background-color: #f8fafc;
+    border-radius: 16px;
+    padding: 30px;
+    height: 100%;
+}
+
+.stat-label-light {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #64748b;
+    margin-bottom: 12px;
+}
+
+.stat-val-huge {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: #1a3252;
+    line-height: 1;
+    margin-bottom: 16px;
+    position: relative;
+    z-index: 10;
+}
+
+.stat-trend {
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.stat-trend.green { color: #64748b; }
+
+.bg-icon {
+    position: absolute;
+    right: -20px;
+    bottom: -20px;
+    font-size: 10rem;
+    color: #e2e8f0;
+    z-index: 0;
+}
+
+.stat-desc-dark {
+    font-size: 0.9rem;
+    color: #94a3b8;
+    line-height: 1.4;
+}
+
+/* ── Card header/title helpers ────────────────────────── */
+.mt-20 { margin-top: 20px; }
+
+.card-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+}
+
+.card-title-sm {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1a3252;
+    margin: 0;
+}
+
+.card-desc-sm {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin: 4px 0 0 0;
+}
+
+/* ── Horizontal bar chart ─────────────────────────────── */
+.bar-chart-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.bar-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.bar-label-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.bar-label,
+.bar-val { color: #1a3252; }
+
+.bar-track {
+    height: 16px;
+    background-color: #f1f5f9;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%;
+    border-radius: 8px;
+}
+
+/* ── Donut chart ──────────────────────────────────────── */
+.donut-chart-wrapper {
+    display: flex;
+    justify-content: center;
+    margin: 40px 0;
+}
+
+.donut-chart {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: conic-gradient(
+        #0f766e 0% 64%,
+        #fb923c 64% 92%,
+        #1a3252 92% 100%
+    );
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.donut-hole {
+    width: 130px;
+    height: 130px;
+    background-color: #f8fafc;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.donut-val {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #1a3252;
+    line-height: 1;
+}
+
+.donut-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #64748b;
+    margin-top: 4px;
+}
+
+/* ── Donut legend ─────────────────────────────────────── */
+.donut-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.legend-marker {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.legend-label {
+    flex: 1;
+    font-size: 0.9rem;
+    color: #1a3252;
+    font-weight: 600;
+}
+
+.legend-val {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #1a3252;
+}
+
+/* ── Chart legend pills (top of vertical chart) ───────── */
+.chart-legend-top {
+    display: flex;
+    gap: 16px;
+}
+
+.legend-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #64748b;
+}
+
+.legend-pill .marker {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.legend-pill .marker.dark  { background-color: #1a3252; }
+.legend-pill .marker.green { background-color: #0f766e; }
+
+/* ── Vertical bar chart ───────────────────────────────── */
+.vertical-chart-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    height: 200px;
+    margin-top: 40px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.v-bar-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 10%;
+    height: 100%;
+    justify-content: flex-end;
+}
+
+.v-bar-bg {
+    width: 100%;
+    background-color: #f1f5f9;
+    border-radius: 4px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+.v-bar-fill {
+    position: absolute;
+    bottom: 0;
+    border-radius: 4px;
+}
+
+.v-bar-fill.dark  { background-color: #1a3252; width: 12px; left: calc(50% - 14px); }
+.v-bar-fill.green { background-color: #0f766e; width: 12px; right: calc(50% - 14px); }
+
+.v-bar-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #64748b;
+}
+
+/* ── Mobile breakpoint ────────────────────────────────── */
+@media (max-width: 768px) {
+    .admin-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    .admin-title {
+        font-size: 1.8rem;
+    }
+
+    /* Single column stat cards */
+    .admin-stats-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    /* Stack workload card */
+    .admin-workload-grid {
+        flex-direction: column;
+    }
+
+    .workload-card-main {
+        padding: 24px 20px;
+    }
+
+    .workload-title {
+        font-size: 1.1rem;
+        margin-bottom: 24px;
+    }
+
+    .workload-stats {
+        gap: 24px;
+        flex-wrap: wrap;
+    }
+
+    .workload-card-side {
+        width: 100%;
+    }
+
+    /* Statistik: single column */
+    .stats-layout {
+        flex-direction: column;
+    }
+
+    .stats-row {
+        flex-direction: column;
+    }
+
+    .stat-val-huge {
+        font-size: 2.5rem;
+    }
+
+    .vertical-chart-container {
+        overflow-x: auto;
+        min-width: 400px;
+    }
+
+    .admin-page-title {
+        font-size: 1.5rem;
+        margin-bottom: 16px;
+    }
+}

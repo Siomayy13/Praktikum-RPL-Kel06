@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { deleteReport } from '../../api/api';
+import { deleteReport, updateReport } from '../../api/api';
 import { getStatusClass, getStatusText, formatTanggal } from '../../utils/formatters';
 
 function ReportDetailView({ selectedReport, user, fetchReports, setActiveView, setModalState }) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [loadingAction, setLoadingAction] = useState(false);
+  const [photoPreview, setPhotoPreview] = useState(false);
 
   if (!selectedReport) {
     return (
@@ -18,16 +20,43 @@ function ReportDetailView({ selectedReport, user, fetchReports, setActiveView, s
     );
   }
 
-  const handleDelete = async () => {
+  const handleBatalkan = async () => {
     try {
+      setLoadingAction(true);
+      const formData = new FormData();
+      formData.append('title', selectedReport.title || '');
+      formData.append('category', selectedReport.category || '');
+      formData.append('location', selectedReport.location || '');
+      formData.append('description', selectedReport.description || '');
+      formData.append('status', 'dibatalkan');
+      await updateReport(selectedReport.id, formData);
+      await fetchReports();
       setShowDeleteModal(false);
+      setModalState({
+        isOpen: true,
+        title: 'Laporan Dibatalkan',
+        message: 'Laporan Anda telah berhasil dibatalkan.',
+        onCloseAction: () => setActiveView('daftar'),
+      });
+    } catch (error) {
+      console.error(error);
+      alert('Gagal membatalkan laporan');
+    } finally {
+      setLoadingAction(false);
+    }
+  };
+
+  const handleHapusPermanent = async () => {
+    try {
+      setLoadingAction(true);
       await deleteReport(selectedReport.id);
       await fetchReports();
+      setShowDeleteModal(false);
       if (setModalState) {
         setModalState({
           isOpen: true,
-          title: 'Laporan Dibatalkan!',
-          message: 'Laporan Anda telah berhasil dibatalkan dan dihapus dari sistem.',
+          title: 'Laporan Dihapus',
+          message: 'Riwayat laporan telah berhasil dihapus dari sistem.',
           onCloseAction: () => setActiveView('daftar'),
         });
       } else {
@@ -35,9 +64,16 @@ function ReportDetailView({ selectedReport, user, fetchReports, setActiveView, s
       }
     } catch (error) {
       console.error(error);
-      alert('Gagal membatalkan laporan');
+      alert('Gagal menghapus laporan');
+    } finally {
+      setLoadingAction(false);
     }
   };
+
+  const status = selectedReport.status?.toLowerCase();
+  const isLocked = ['diproses', 'selesai'].includes(status);
+  const isCancelled = status === 'dibatalkan';
+  const isDeleteOnly = isCancelled || status === 'ditolak';
 
   return (
     <>
@@ -87,7 +123,12 @@ function ReportDetailView({ selectedReport, user, fetchReports, setActiveView, s
             <div className="detail-section-title">Bukti Foto</div>
             <div className="upload-preview-grid" style={{ marginTop: '10px' }}>
               {selectedReport.photo ? (
-                <img src={selectedReport.photo} alt="report" style={{ width: '150px', borderRadius: '8px', objectFit: 'cover' }} />
+                <img
+                  src={selectedReport.photo}
+                  alt="report"
+                  style={{ width: '150px', borderRadius: '8px', objectFit: 'cover', cursor: 'zoom-in' }}
+                  onClick={() => setPhotoPreview(true)}
+                />
               ) : (
                 <div className="preview-box"><i className="far fa-image"></i></div>
               )}
@@ -97,12 +138,25 @@ function ReportDetailView({ selectedReport, user, fetchReports, setActiveView, s
 
         <div className="list-side">
           <div className="detail-header-actions">
-            <button className="btn-edit-report" onClick={() => setActiveView('edit')} style={{ flex: 1, justifyContent: 'center' }}>
-              <i className="fas fa-pen"></i> Edit Laporan
-            </button>
-            <button className="btn-delete-report" style={{ flex: 1, justifyContent: 'center' }} onClick={() => setShowDeleteModal(true)}>
-              <i className="fas fa-trash-alt"></i> Batalkan Laporan
-            </button>
+            {isDeleteOnly ? (
+              <button className="btn-delete-report" style={{ flex: 1, justifyContent: 'center' }} onClick={() => setShowDeleteModal(true)}>
+                <i className="fas fa-trash-alt"></i> Hapus Riwayat Laporan
+              </button>
+            ) : isLocked ? (
+              <div style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 14px', background: '#f1f5f9', borderRadius: '8px', color: '#94a3b8', fontSize: '0.82rem', fontWeight: 600 }}>
+                <i className="fas fa-lock"></i>
+                Laporan tidak dapat diubah karena sudah {status === 'selesai' ? 'selesai' : 'diproses'}
+              </div>
+            ) : (
+              <>
+                <button className="btn-edit-report" onClick={() => setActiveView('edit')} style={{ flex: 1, justifyContent: 'center' }}>
+                  <i className="fas fa-pen"></i> Edit Laporan
+                </button>
+                <button className="btn-delete-report" style={{ flex: 1, justifyContent: 'center' }} onClick={() => setShowDeleteModal(true)}>
+                  <i className="fas fa-trash-alt"></i> Batalkan Laporan
+                </button>
+              </>
+            )}
           </div>
 
           <div className="side-panel" style={{ backgroundColor: 'white' }}>
@@ -134,14 +188,32 @@ function ReportDetailView({ selectedReport, user, fetchReports, setActiveView, s
         </div>
       </div>
 
+      {photoPreview && (
+        <div className="photo-lightbox-overlay" onClick={() => setPhotoPreview(false)}>
+          <img src={selectedReport.photo} alt="preview" className="photo-lightbox-img" />
+        </div>
+      )}
+
       {showDeleteModal && (
         <div className="delete-modal-overlay">
           <div className="delete-modal-content">
-            <div className="delete-modal-icon"><i className="fas fa-trash-alt"></i></div>
-            <h2 className="delete-modal-title">Hapus Laporan?</h2>
-            <p className="delete-modal-text">Apakah Anda yakin ingin menghapus laporan ini?<br />Tindakan ini tidak dapat dibatalkan.</p>
-            <button className="delete-modal-btn-confirm" onClick={handleDelete}>Batalkan laporan</button>
-            <button className="delete-modal-btn-cancel" onClick={() => setShowDeleteModal(false)}>Batal</button>
+            <div className="delete-modal-icon">
+              <i className={isDeleteOnly ? 'fas fa-trash-alt' : 'fas fa-ban'}></i>
+            </div>
+            <h2 className="delete-modal-title">
+              {isDeleteOnly ? 'Hapus Riwayat Laporan?' : 'Batalkan Laporan?'}
+            </h2>
+            <p className="delete-modal-text">
+              {isDeleteOnly
+                ? <>Laporan akan dihapus permanen dari sistem.<br />Tindakan ini tidak dapat dibatalkan.</>
+                : <>Laporan akan ditandai sebagai <strong>dibatalkan</strong>.<br />Anda masih bisa menghapus riwayatnya nanti.</>
+              }
+            </p>
+            <button className="delete-modal-btn-confirm" onClick={isDeleteOnly ? handleHapusPermanent : handleBatalkan} disabled={loadingAction}>
+              <i className={loadingAction ? 'fas fa-spinner fa-spin' : (isDeleteOnly ? 'fas fa-trash-alt' : 'fas fa-ban')} style={{ marginRight: '6px' }}></i>
+              {loadingAction ? 'Memproses...' : (isDeleteOnly ? 'Hapus Permanen' : 'Ya, Batalkan')}
+            </button>
+            <button className="delete-modal-btn-cancel" onClick={() => setShowDeleteModal(false)} disabled={loadingAction}>Kembali</button>
           </div>
         </div>
       )}

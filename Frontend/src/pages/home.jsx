@@ -36,32 +36,32 @@ function Home() {
             <Link to="/" className="nav-logo">
               lapor.in
             </Link>
-            <div className="nav-links">
-              <a 
-                href="#" 
-                className={`nav-link ${activeTab === "Beranda" ? "active" : ""}`}
-                onClick={() => setActiveTab("Beranda")}
-                title="Beranda"
-              >
-                Beranda
-              </a>
-              <a 
-                href="#steps" 
-                className={`nav-link ${activeTab === "Langkah Pengaduan" ? "active" : ""}`}
-                onClick={() => setActiveTab("Langkah Pengaduan")}
-                title="Langkah Pengaduan"
-              >
-                Langkah Pengaduan
-              </a>
-              <a 
-                href="#features" 
-                className={`nav-link ${activeTab === "Informasi" ? "active" : ""}`}
-                onClick={() => setActiveTab("Informasi")}
-                title="Informasi"
-              >
-                Informasi
-              </a>
-            </div>
+          </div>
+          <div className="nav-links">
+            <a
+              href="#"
+              className={`nav-link ${activeTab === "Beranda" ? "active" : ""}`}
+              onClick={() => setActiveTab("Beranda")}
+              title="Beranda"
+            >
+              Beranda
+            </a>
+            <a
+              href="#steps"
+              className={`nav-link ${activeTab === "Langkah Pengaduan" ? "active" : ""}`}
+              onClick={() => setActiveTab("Langkah Pengaduan")}
+              title="Langkah Pengaduan"
+            >
+              Langkah Pengaduan
+            </a>
+            <a
+              href="#features"
+              className={`nav-link ${activeTab === "Informasi" ? "active" : ""}`}
+              onClick={() => setActiveTab("Informasi")}
+              title="Informasi"
+            >
+              Informasi
+            </a>
           </div>
           <div className="nav-auth">
             <Link to="/login" className="nav-login">

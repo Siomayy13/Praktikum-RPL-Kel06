@@ -1,0 +1,215 @@
+/* ─────────────────────────────────────────────────────────
+ * Table
+ * Data table, filter bar, and pagination.
+ * ───────────────────────────────────────────────────────── */
+
+/* ── Container & header ───────────────────────────────── */
+.table-container {
+    background-color: white;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.table-header h3 {
+    color: #1a3252;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0 0 4px 0;
+}
+
+.table-header p {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* ── Table base ───────────────────────────────────────── */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    text-align: left;
+    padding: 16px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+td {
+    padding: 20px 16px;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+}
+
+/* ── Cell variants ────────────────────────────────────── */
+.td-id {
+    font-weight: 700;
+    color: #1a3252;
+    font-size: 0.95rem;
+}
+
+.td-title {
+    font-weight: 700;
+    color: #1a3252;
+    font-size: 0.95rem;
+    margin: 0 0 4px 0;
+}
+
+.td-desc {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin: 0;
+}
+
+.td-loc {
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.td-time {
+    color: #64748b;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+/* btn-icon inside table cells should not float */
+td .btn-icon {
+    float: none;
+    flex-shrink: 0;
+}
+
+.td-id {
+    white-space: nowrap;
+}
+
+/* ── Filter toolbar ───────────────────────────────────── */
+.table-filters {
+    display: flex;
+    background-color: #f1f5f9;
+    border-radius: 8px;
+    padding: 4px;
+}
+
+.filter-btn {
+    background: white;
+    border: 1.5px solid #e2e8f0;
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #475569;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.filter-btn:hover {
+    border-color: #1a3252;
+    color: #1a3252;
+    background: #f8fafc;
+}
+
+.filter-btn.active {
+    background-color: #1a3252;
+    color: white;
+    border-color: #1a3252;
+    box-shadow: 0 2px 8px rgba(26, 50, 82, 0.25);
+}
+
+/* ── Pagination ───────────────────────────────────────── */
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 20px;
+    border-top: 1px solid #f1f5f9;
+}
+
+.page-info {
+    color: #94a3b8;
+    font-size: 0.85rem;
+}
+
+.page-numbers {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.page-num {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    color: #64748b;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.page-num.active {
+    background-color: #1a3252;
+    color: white;
+}
+
+/* ── Mobile breakpoint ────────────────────────────────── */
+@media (max-width: 768px) {
+    .table-container {
+        padding: 16px;
+        /* Allow horizontal scroll for table on narrow screens */
+        overflow-x: auto;
+    }
+
+    /* Stack title + search + filters vertically */
+    .table-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        margin-bottom: 16px;
+    }
+
+    .table-header .search-container {
+        max-width: 100%;
+    }
+
+    /* Wrap filter buttons */
+    .table-header > div:last-child {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    /* Force table to scroll horizontally rather than squish */
+    table {
+        min-width: 580px;
+    }
+
+    th, td {
+        padding: 12px 10px;
+    }
+
+    /* Pagination: stack info + numbers */
+    .pagination {
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+    }
+}

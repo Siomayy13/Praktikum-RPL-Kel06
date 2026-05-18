@@ -15,17 +15,17 @@ function ReportListPage() {
   const contentAreaRef = useRef(null);
 
   const { reports, fetchReports } = useReports(user?.id);
-  const [subView, setSubView] = useState('list');
-  const [selectedReport, setSelectedReport] = useState(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [subView, setSubView] = useState(() => {
+    if (location.state?.selectedReport || location.state?.initialView === 'detail') return 'detail';
+    return 'list';
+  });
+  const [selectedReport, setSelectedReport] = useState(() => location.state?.selectedReport || null);
   const [showBuatModal, setShowBuatModal] = useState(false);
   const [modalState, setModalState] = useState({ isOpen: false, title: '', message: '', onCloseAction: null });
 
   useEffect(() => {
     fetchReports();
-    if (location.state?.selectedReport) {
-      setSelectedReport(location.state.selectedReport);
-      setSubView('detail');
-    }
   }, []);
 
   useEffect(() => {
@@ -53,7 +53,7 @@ function ReportListPage() {
   const handleSidebarNav = (viewId) => {
     if (viewId === 'beranda') navigate('/dashboard');
     else if (viewId === 'daftar') setSubView('list');
-    else if (viewId === 'detail') setSubView('detail');
+    else if (viewId === 'detail') { setSelectedReport(null); setSubView('detail'); }
     else if (viewId === 'profil') navigate('/dashboard');
   };
 
@@ -66,14 +66,19 @@ function ReportListPage() {
         setActiveView={handleSidebarNav}
         handleLogout={handleLogout}
         onBuatLaporan={() => setShowBuatModal(true)}
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
       />
 
       <div className="main-wrapper">
         <div className="topbar">
           <div className="topbar-left">
+            <button className="hamburger-btn" onClick={() => setSidebarOpen(true)}>
+              <i className="fas fa-bars"></i>
+            </button>
             <div className="topbar-logo-mobile">lapor.in</div>
           </div>
-          <div className="topbar-user" onClick={() => navigate('/dashboard')} style={{ cursor: 'pointer' }}>
+          <div className="topbar-user" onClick={() => navigate('/dashboard', { state: { view: 'profil' } })} style={{ cursor: 'pointer' }}>
             {user?.photo ? (
               <img src={user.photo} alt="avatar" style={{ width: '28px', height: '28px', borderRadius: '50%', objectFit: 'cover' }} />
             ) : (

@@ -1,11 +1,38 @@
 import React, { useState } from 'react';
 import { getStatusClass, formatTimeAgo } from '../../utils/formatters';
+import { Dropdown } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
+
+const periodOptions = [
+  { value: 'semua',      label: 'Semua Waktu' },
+  { value: 'hari_ini',   label: 'Hari Ini' },
+  { value: 'minggu_ini', label: 'Minggu Ini' },
+  { value: 'bulan_ini',  label: 'Bulan Ini' },
+  { value: 'tahun_ini',  label: 'Tahun Ini' },
+];
+
+function filterByPeriod(reports, period) {
+  const now = new Date();
+  return reports.filter(r => {
+    const d = new Date(r.createdAt);
+    if (period === 'hari_ini') return d.toDateString() === now.toDateString();
+    if (period === 'minggu_ini') {
+      const start = new Date(now);
+      start.setDate(now.getDate() - now.getDay());
+      start.setHours(0, 0, 0, 0);
+      return d >= start;
+    }
+    if (period === 'bulan_ini') return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+    if (period === 'tahun_ini') return d.getFullYear() === now.getFullYear();
+    return true;
+  });
+}
 
 function AdminReportListView({ reports, onViewDetail }) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [filterKategori, setFilterKategori] = useState('Semua');
-  const [filterStatus, setFilterStatus] = useState('Semua');
-  const [openDropdown, setOpenDropdown] = useState(null);
+  const [filterKategori, setFilterKategori] = useState('semua');
+  const [filterStatus, setFilterStatus] = useState('semua');
+  const [filterTanggal, setFilterTanggal] = useState('semua');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 7;
 
@@ -13,15 +40,17 @@ function AdminReportListView({ reports, onViewDetail }) {
   const diproses = reports.filter(r => r.status?.toLowerCase() === 'diproses').length;
   const selesai = reports.filter(r => r.status?.toLowerCase() === 'selesai').length;
 
-  const filtered = reports.filter(r => {
+  const filtered = filterByPeriod(reports, filterTanggal).filter(r => {
     const matchSearch =
       r.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       r.location?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       r.category?.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchKategori = filterKategori === 'Semua' || r.category?.toLowerCase() === filterKategori.toLowerCase();
-    const matchStatus = filterStatus === 'Semua' || r.status?.toLowerCase() === filterStatus.toLowerCase();
+    const matchKategori = filterKategori === 'semua' || r.category?.toLowerCase() === filterKategori;
+    const matchStatus   = filterStatus === 'semua'   || r.status?.toLowerCase()   === filterStatus;
     return matchSearch && matchKategori && matchStatus;
   }).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+  const hasActiveFilter = filterKategori !== 'semua' || filterStatus !== 'semua' || filterTanggal !== 'semua';
 
   const totalPages = Math.ceil(filtered.length / itemsPerPage) || 1;
   const currentReports = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
@@ -55,7 +84,7 @@ function AdminReportListView({ reports, onViewDetail }) {
       <div className="table-container">
         <div className="table-header" style={{ marginBottom: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#1a3252' }}>Daftar Antrean Laporan</h3>
-          <div className="search-container" style={{ margin: '0 20px', flex: 1, maxWidth: '400px' }}>
+          <div className="search-container" style={{ margin: '0 16px', flex: 1, maxWidth: '380px' }}>
             <i className="fas fa-search"></i>
             <input
               type="text"
@@ -65,59 +94,71 @@ function AdminReportListView({ reports, onViewDetail }) {
               onChange={(e) => { setSearchQuery(e.target.value); resetPage(); }}
             />
           </div>
-          <div className="table-filters" style={{ display: 'flex', gap: '4px', position: 'relative' }}>
-            <button
-              className={`filter-btn ${filterKategori === 'Semua' && filterStatus === 'Semua' ? 'active' : ''}`}
-              onClick={() => { setFilterKategori('Semua'); setFilterStatus('Semua'); resetPage(); setOpenDropdown(null); }}
-            >Semua</button>
-
-            <div style={{ position: 'relative' }}>
-              <button
-                className={`filter-btn ${filterKategori !== 'Semua' ? 'active' : ''}`}
-                onClick={() => setOpenDropdown(openDropdown === 'kategori' ? null : 'kategori')}
-                style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
-              >
-                {filterKategori === 'Semua' ? 'Tingkat Kerusakan' : filterKategori}
-                <i className={`fas fa-chevron-${openDropdown === 'kategori' ? 'up' : 'down'}`} style={{ fontSize: '0.7rem' }}></i>
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+            {/* Filter Tingkat Kerusakan */}
+            <Dropdown
+              menu={{
+                items: [
+                  { key: 'semua',  label: 'Semua Tingkat' },
+                  { key: 'ringan', label: 'Ringan' },
+                  { key: 'sedang', label: 'Sedang' },
+                  { key: 'berat',  label: 'Berat' },
+                ],
+                selectedKeys: [filterKategori],
+                onClick: ({ key }) => { setFilterKategori(key); resetPage(); },
+              }}
+              trigger={['click']}
+            >
+              <button type="button" className={`filter-btn${filterKategori !== 'semua' ? ' active' : ''}`} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                {filterKategori === 'semua' ? 'Kerusakan' : filterKategori.charAt(0).toUpperCase() + filterKategori.slice(1)}
+                <DownOutlined style={{ fontSize: '10px' }} />
               </button>
-              {openDropdown === 'kategori' && (
-                <div style={{ position: 'absolute', top: '100%', left: 0, marginTop: '8px', background: 'white', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', padding: '8px', zIndex: 10, width: '200px' }}>
-                  {['Semua', 'Berat', 'Sedang', 'Ringan'].map(opt => (
-                    <div
-                      key={opt}
-                      onClick={() => { setFilterKategori(opt); setOpenDropdown(null); resetPage(); }}
-                      style={{ padding: '8px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', color: filterKategori === opt ? '#0f766e' : '#475569', background: filterKategori === opt ? '#f0fdfa' : 'transparent', fontWeight: filterKategori === opt ? '600' : '500' }}
-                    >
-                      {opt === 'Semua' ? 'Semua Tingkat Kerusakan' : opt}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+            </Dropdown>
 
-            <div style={{ position: 'relative' }}>
-              <button
-                className={`filter-btn ${filterStatus !== 'Semua' ? 'active' : ''}`}
-                onClick={() => setOpenDropdown(openDropdown === 'status' ? null : 'status')}
-                style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
-              >
-                {filterStatus === 'Semua' ? 'Status' : filterStatus}
-                <i className={`fas fa-chevron-${openDropdown === 'status' ? 'up' : 'down'}`} style={{ fontSize: '0.7rem' }}></i>
+            {/* Filter Tanggal */}
+            <Dropdown
+              menu={{
+                items: periodOptions.map(o => ({ key: o.value, label: o.label })),
+                selectedKeys: [filterTanggal],
+                onClick: ({ key }) => { setFilterTanggal(key); resetPage(); },
+              }}
+              trigger={['click']}
+            >
+              <button type="button" className={`filter-btn${filterTanggal !== 'semua' ? ' active' : ''}`} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                {periodOptions.find(o => o.value === filterTanggal)?.label}
+                <DownOutlined style={{ fontSize: '10px' }} />
               </button>
-              {openDropdown === 'status' && (
-                <div style={{ position: 'absolute', top: '100%', left: 0, marginTop: '8px', background: 'white', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', padding: '8px', zIndex: 10, width: '140px' }}>
-                  {['Semua', 'Pending', 'Diproses', 'Selesai', 'Ditolak'].map(opt => (
-                    <div
-                      key={opt}
-                      onClick={() => { setFilterStatus(opt); setOpenDropdown(null); resetPage(); }}
-                      style={{ padding: '8px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '0.85rem', color: filterStatus === opt ? '#0f766e' : '#475569', background: filterStatus === opt ? '#f0fdfa' : 'transparent', fontWeight: filterStatus === opt ? '600' : '500' }}
-                    >
-                      {opt === 'Semua' ? 'Semua Status' : opt}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+            </Dropdown>
+
+            {/* Filter Status */}
+            <Dropdown
+              menu={{
+                items: [
+                  { key: 'semua',      label: 'Semua Status' },
+                  { key: 'pending',    label: 'Pending' },
+                  { key: 'diproses',   label: 'Diproses' },
+                  { key: 'selesai',    label: 'Selesai' },
+                  { key: 'ditolak',    label: 'Ditolak' },
+                  { key: 'dibatalkan', label: 'Dibatalkan' },
+                ],
+                selectedKeys: [filterStatus],
+                onClick: ({ key }) => { setFilterStatus(key); resetPage(); },
+              }}
+              trigger={['click']}
+            >
+              <button type="button" className={`filter-btn${filterStatus !== 'semua' ? ' active' : ''}`} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                {filterStatus === 'semua' ? 'Status' : filterStatus.charAt(0).toUpperCase() + filterStatus.slice(1)}
+                <DownOutlined style={{ fontSize: '10px' }} />
+              </button>
+            </Dropdown>
+
+            {/* Reset */}
+            {hasActiveFilter && (
+              <button type="button" className="filter-btn" style={{ color: '#b91c1c', borderColor: '#fca5a5' }}
+                onClick={() => { setFilterKategori('semua'); setFilterStatus('semua'); setFilterTanggal('semua'); resetPage(); }}>
+                <i className="fas fa-xmark" style={{ marginRight: '4px' }}></i> Reset
+              </button>
+            )}
           </div>
         </div>
 
