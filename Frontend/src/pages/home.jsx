@@ -80,12 +80,8 @@ function Home() {
           <p>
             Sistem pelaporan terpadu untuk pemeliharaan dan perbaikan fasilitas kampus guna mendukung kenyamanan civitas akademika.
           </p>
-          <div className="hero-actions">
+          <div className="hero-actions" style={{ justifyContent: 'center' }}>
             <Link to="/register" className="btn-primary">Lapor Sekarang</Link>
-            <div className="search-box">
-              <input type="text" placeholder="Cek Status Laporan..." />
-              <i className="fas fa-search"></i>
-            </div>
           </div>
         </div>
       </header>
