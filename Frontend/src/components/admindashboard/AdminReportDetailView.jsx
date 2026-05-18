@@ -31,6 +31,8 @@ function AdminReportDetailView({ selectedReport, setSelectedReport, user, fetchR
   const handleUpdateStatus = async (newStatus) => {
     if (updatingStatus) return;
     setUpdatingStatus(newStatus);
+    const toastKey = 'update-status';
+    messageApi.open({ key: toastKey, type: 'loading', content: 'Memperbarui status laporan...', duration: 0 });
     try {
       const formData = new FormData();
       formData.append('title', selectedReport.title || '');
@@ -44,14 +46,10 @@ function AdminReportDetailView({ selectedReport, setSelectedReport, user, fetchR
       await fetchReports();
       if (updatedResponse?.data) setSelectedReport(updatedResponse.data);
       setDropdownOpen(false);
-      messageApi
-        .open({ type: 'loading', content: 'Memperbarui status laporan...', duration: 1 })
-        .then(() => messageApi.success(`Status berhasil diubah ke "${newStatus.charAt(0).toUpperCase() + newStatus.slice(1)}"`, 2));
+      messageApi.open({ key: toastKey, type: 'success', content: `Status berhasil diubah ke "${newStatus.charAt(0).toUpperCase() + newStatus.slice(1)}"`, duration: 2 });
     } catch (err) {
       console.error(err);
-      messageApi
-        .open({ type: 'loading', content: 'Memperbarui status laporan...', duration: 0.5 })
-        .then(() => messageApi.error('Gagal mengupdate status laporan', 2));
+      messageApi.open({ key: toastKey, type: 'error', content: 'Gagal mengupdate status laporan', duration: 2 });
     } finally {
       setUpdatingStatus(null);
     }
