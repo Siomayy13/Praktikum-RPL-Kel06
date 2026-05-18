@@ -41,6 +41,7 @@ function Home() {
                 href="#" 
                 className={`nav-link ${activeTab === "Beranda" ? "active" : ""}`}
                 onClick={() => setActiveTab("Beranda")}
+                title="Beranda"
               >
                 Beranda
               </a>
@@ -48,6 +49,7 @@ function Home() {
                 href="#steps" 
                 className={`nav-link ${activeTab === "Langkah Pengaduan" ? "active" : ""}`}
                 onClick={() => setActiveTab("Langkah Pengaduan")}
+                title="Langkah Pengaduan"
               >
                 Langkah Pengaduan
               </a>
@@ -55,6 +57,7 @@ function Home() {
                 href="#features" 
                 className={`nav-link ${activeTab === "Informasi" ? "active" : ""}`}
                 onClick={() => setActiveTab("Informasi")}
+                title="Informasi"
               >
                 Informasi
               </a>

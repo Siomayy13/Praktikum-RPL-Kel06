@@ -15,9 +15,9 @@ const Navbar = () => {
     <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
       <a href="#" className="nav-brand">lapor.<span>in</span></a>
       <div className="nav-links">
-        <a href="#hero" className="active">Beranda</a>
-        <a href="#steps">Langkah Pengaduan</a>
-        <a href="#features">Informasi</a>
+        <a href="#hero" className="active" title="Beranda">Beranda</a>
+        <a href="#steps" title="Langkah Pengaduan">Langkah Pengaduan</a>
+        <a href="#features" title="Informasi">Informasi</a>
       </div>
       <div className="nav-auth">
         <a href="#" className="btn-masuk">Masuk</a>

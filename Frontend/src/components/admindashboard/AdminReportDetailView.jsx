@@ -179,7 +179,7 @@ function AdminReportDetailView({ selectedReport, setSelectedReport, user, fetchR
           <div className="delete-modal-content">
             <div className="delete-modal-icon"><i className="fas fa-trash-alt"></i></div>
             <h2 className="delete-modal-title">Hapus Laporan?</h2>
-            <p className="delete-modal-text">Apakah Anda yakin ingin menghapus laporan ini? Tindakan ini tidak dapat dibatalkan.</p>
+            <p className="delete-modal-text">Apakah Anda yakin ingin menghapus laporan ini?<br />Tindakan ini tidak dapat dibatalkan.</p>
             <button className="delete-modal-btn-confirm" onClick={handleDelete}>Hapus</button>
             <button className="delete-modal-btn-cancel" onClick={() => setShowDeleteModal(false)}>Batal</button>
           </div>
