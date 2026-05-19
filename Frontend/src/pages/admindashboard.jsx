@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/sidebar';
 import { useAdminReports } from '../hooks/useAdminReports';
+import { useAdminNotifications } from '../hooks/useAdminNotifications';
+import NotificationBell from '../components/NotificationBell';
 import AdminDashboardView from '../components/admindashboard/AdminDashboardView';
 import AdminReportListView from '../components/admindashboard/AdminReportListView';
 import AdminReportDetailView from '../components/admindashboard/AdminReportDetailView';
@@ -16,6 +18,7 @@ function AdminDashboard() {
   const [selectedReport, setSelectedReport] = useState(null);
   const [modalState, setModalState] = useState({ isOpen: false, title: '', message: '', onCloseAction: null });
   const { reports, fetchReports } = useAdminReports();
+  const { notifications, unreadCount, markAllRead, markRead, clearAll } = useAdminNotifications(reports);
   const contentAreaRef = useRef(null);
   const navigate = useNavigate();
 
@@ -53,13 +56,26 @@ function AdminDashboard() {
             </button>
             <div className="topbar-logo-mobile">lapor.in</div>
           </div>
-          <div className="topbar-user" onClick={() => setActiveView('profil')} style={{ cursor: 'pointer' }}>
-            {user?.photo ? (
-              <img src={user.photo} alt="avatar" style={{ width: '28px', height: '28px', borderRadius: '50%', objectFit: 'cover' }} />
-            ) : (
-              <i className="far fa-user-circle"></i>
-            )}
-            <span style={{ marginLeft: '8px' }}>{user?.username || 'Admin'}</span>
+          <div className="topbar-right">
+            <NotificationBell
+              notifications={notifications}
+              unreadCount={unreadCount}
+              markAllRead={markAllRead}
+              markRead={markRead}
+              clearAll={clearAll}
+              onNavigate={(reportId) => {
+                const report = reports.find((r) => r.id === reportId);
+                if (report) handleViewDetail(report);
+              }}
+            />
+            <div className="topbar-user" onClick={() => setActiveView('profil')} style={{ cursor: 'pointer' }}>
+              {user?.photo ? (
+                <img src={user.photo} alt="avatar" style={{ width: '28px', height: '28px', borderRadius: '50%', objectFit: 'cover' }} />
+              ) : (
+                <i className="far fa-user-circle"></i>
+              )}
+              <span style={{ marginLeft: '8px' }}>{user?.username || 'Admin'}</span>
+            </div>
           </div>
         </div>
 

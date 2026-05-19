@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Sidebar from '../components/sidebar';
 import { useReports } from '../hooks/useReports';
+import { useNotifications } from '../hooks/useNotifications';
+import NotificationBell from '../components/NotificationBell';
 import ReportListView from '../components/dashboard/ReportListView';
 import ReportDetailView from '../components/dashboard/ReportDetailView';
 import EditReportView from '../components/dashboard/EditReportView';
@@ -15,6 +17,7 @@ function ReportListPage() {
   const contentAreaRef = useRef(null);
 
   const { reports, fetchReports } = useReports(user?.id);
+  const { notifications, unreadCount, markAllRead, markRead, clearAll } = useNotifications(reports, user?.id);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [subView, setSubView] = useState(() => {
     if (location.state?.selectedReport || location.state?.initialView === 'detail') return 'detail';
@@ -78,13 +81,22 @@ function ReportListPage() {
             </button>
             <div className="topbar-logo-mobile">lapor.in</div>
           </div>
-          <div className="topbar-user" onClick={() => navigate('/dashboard', { state: { view: 'profil' } })} style={{ cursor: 'pointer' }}>
-            {user?.photo ? (
-              <img src={user.photo} alt="avatar" style={{ width: '28px', height: '28px', borderRadius: '50%', objectFit: 'cover' }} />
-            ) : (
-              <i className="far fa-user-circle"></i>
-            )}
-            <span style={{ marginLeft: '8px' }}>{user?.name || 'User'}</span>
+          <div className="topbar-right">
+            <NotificationBell
+              notifications={notifications}
+              unreadCount={unreadCount}
+              markAllRead={markAllRead}
+              markRead={markRead}
+              clearAll={clearAll}
+            />
+            <div className="topbar-user" onClick={() => navigate('/dashboard', { state: { view: 'profil' } })} style={{ cursor: 'pointer' }}>
+              {user?.photo ? (
+                <img src={user.photo} alt="avatar" style={{ width: '28px', height: '28px', borderRadius: '50%', objectFit: 'cover' }} />
+              ) : (
+                <i className="far fa-user-circle"></i>
+              )}
+              <span style={{ marginLeft: '8px' }}>{user?.name || 'User'}</span>
+            </div>
           </div>
         </div>
 
